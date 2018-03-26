@@ -1,2 +1,6 @@
 # shopify-embedded-app-starter
-Nodejs starter for Shopify Embedded Apps
+Nodejs starter for Shopify Embedded Apps. 
+
+## TODO
+- streamline the authentication routing
+- routes need a good refractor and documentation
