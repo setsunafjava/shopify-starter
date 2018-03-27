@@ -8,6 +8,7 @@ const verifyHmac = (request, response, next) => {
     .filter(key => key !== 'hmac')
     .map(key => `${key}=${Array(request.query[key]).join(',')}`)
     .sort().join('&');
+
   const digest = useHeader ? 'base64' : 'hex';
   const generatedHmac = crypto.createHmac('sha256', SHOPIFY_API_SECRET).update(data).digest(digest);
 

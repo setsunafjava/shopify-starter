@@ -3,12 +3,16 @@ const path = require('path')
 const router = express.Router()
 const { publicRoute, privateRoute } = require('../middleware')
 
-router.use('/client', privateRoute, (request, response, next) => {
-  response.sendFile(request.path, { root: path.join(__dirname, '/../../assets/client/')})
+router.use('/site', (request, response, next) => {
+  response.sendFile(request.path, { root: path.join(__dirname, '/../../assets/site/')})
 });
 
-router.use('/scriptTags', publicRoute, (request, response, next) => {
-  response.sendFile(request.path, { root: path.join(__dirname, '/../../assets/scriptTags/')})
+router.use('/app/script-tag', publicRoute, (request, response, next) => {
+  response.sendFile(request.path, { root: path.join(__dirname, '/../../assets/app/script-tag/')})
+});
+
+router.use('/app', privateRoute, (request, response, next) => {
+  response.sendFile(request.path, { root: path.join(__dirname, '/../../assets/app/')})
 });
 
 module.exports = router;

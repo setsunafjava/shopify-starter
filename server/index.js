@@ -36,25 +36,26 @@ const configureExpress = () => {
     // logging
     app.use(logger('dev'));
 
-    // serve client (react) with webpack in development
+    // serve clients (react app and site) with webpack in development
     if (NODE_ENV === 'development') {
       const compiler = webpack(webpackConfig);
-      const middleware = webpackMiddleware(compiler, {
-        hot: true,
-        inline: true,
-        publicPath: webpackConfig.output.publicPath,
-        contentBase: path.resolve(__dirname, '../assets'),
-        stats: {
-          colors: true,
-          hash: false,
-          timings: true,
-          chunks: false,
-          chunkModules: false,
-          modules: false,
-        },
+      
+      app.use(webpackMiddleware(compiler, {
+          hot: true,
+          inline: true,
+          stats: {
+            colors: true,
+            hash: false,
+            timings: true,
+            chunks: false,
+            chunkModules: false,
+            modules: false,
+          },
+        }))
+
+      webpackConfig.map(config => {
+        app.use(webpackHotMiddleware(compiler, { name: config.name, dynamicPublicPath: true }));
       });
-      app.use(middleware);
-      app.use(webpackHotMiddleware(compiler));
     }
 
     // routes
@@ -63,7 +64,8 @@ const configureExpress = () => {
     app.use('/proxy', routes.proxy);
     app.use('/assets', routes.assets);
     app.use('/api', routes.api);
-    app.use('/', routes.app);
+    app.use('/app', routes.app);
+    app.use('/', routes.site);
 
     // 404
     app.use((req, res, next) => {

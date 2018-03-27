@@ -1,10 +1,8 @@
-const verifyHmac = require('./verifyHmac');
-const withShop = require('./withShop');
-const ensureOrigin = require('./ensureOrigin');
-const directInstall = require('./directInstall');
-const redirectToApp = require('./redirectToApp');
-const installAccessToken = require('./installAccessToken');
-const sendLiquid = require('./sendLiquid');
+const verifyHmac = require('./verify-hmac');
+const withShop = require('./with-shop');
+const ensureOrigin = require('./ensure-origin');
+const sendLiquid = require('./send-liquid');
+const redirectToApp = require('./redirect-to-app');
 
 /* PUBLIC ROUTES
  * =============
@@ -28,8 +26,6 @@ module.exports = {
   ensureOrigin,
   publicRoute,
   privateRoute,
-  directInstall,
-  redirectToApp,
-  installAccessToken,
   sendLiquid,
+  redirectToApp,
 };

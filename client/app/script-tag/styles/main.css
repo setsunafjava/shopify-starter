@@ -1,0 +1,15 @@
+.hello {
+  font-size: 30px;
+  color: gray;
+  text-align: center;
+  max-height: 0;
+  height: 100px;
+  line-height: 100px;
+  transform: translate3d(0,0,0);
+  transition: max-height 500ms;
+}
+
+
+.hello.open {
+  max-height: 100px;
+}

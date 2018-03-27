@@ -1,36 +1,8 @@
 const express = require('express');
-const axios = require('axios');
-const generateNonce = require('nonce')();
-const { Shop } = require('../models');
-const { SHOPIFY_API_KEY, SHOPIFY_API_SECRET, SHOPIFY_APP_SCOPE, URL } = require('../../config/env');
-const { privateRoute, redirectToApp } = require('../middleware');
+const { SHOPIFY_API_KEY } = require('../../config/env');
+const { privateRoute } = require('../middleware');
 const router = express.Router();
 
-// install route
-router.get('/', (request, response, next) => {
-  const { shop } = request.query;
-  if (!shop) {
-    return next({
-      status: 422, 
-      message: 'Missing shop parameter'
-    })
-  }
-
-  const domain = shop
-  const nonce = generateNonce()
-  const authURL = `https://${shop}.myshopify.com/admin/oauth/authorize`
-    + `?client_id=${SHOPIFY_API_KEY}`
-    + `&scope=${SHOPIFY_APP_SCOPE}`
-    + `&state=${nonce}`
-    + `&redirect_uri=${URL}/install/callback`
-
-  Shop.findByIdAndUpdate(shop, { _id: shop, domain, nonce }, { upsert: true })
-  .then((shop) => {
-    return response.redirect(authURL)
-  }).catch(next)
-})
-
-// secure the callback route and provide a shop
 router.use(privateRoute)
 
 // install permenant access token
@@ -55,15 +27,15 @@ router.get('/callback', (request, response, next) => {
 
 // handle billing
 router.get('/callback', (request, response, next) => {
-  next()
+  
 })
 
-// install scriptTag using shop.api
+// install scriptTags using shop.api
 router.get('/callback', (request, response, next) => {
   const { shop } = response.locals
   shop.api.scriptTag.create({
     event: 'onload',
-    src: `${URL}/assets/app/script-tag/main.js`
+    src: `${URL}/assets/scriptTags/index.js`
   })
   .then(() => next())
   .catch(next)
@@ -81,6 +53,8 @@ router.get('/callback', (request, response, next) => {
 })
 
 // post isntall done - redirect to app in admin
-router.use('/callback', redirectToApp)
-
-module.exports = router
+router.get('/callback', (request, response, next) => {
+  const { shop } = response.locals
+  const redirect = `https://${shop.domain}.myshopify.com/admin/apps/${SHOPIFY_API_KEY}`
+  response.redirect(redirect)
+})

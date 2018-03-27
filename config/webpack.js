@@ -2,40 +2,28 @@ const path = require('path');
 const webpack = require('webpack');
 const autoprefixer = require('autoprefixer');
 const babel = require('../config/babel');
-const isDevelopment = process.env.NODE_ENV !== 'production';
-const extraEntryFiles = isDevelopment
-  ? ['react-hot-loader/patch', 'webpack-hot-middleware/client']
-  : [];
+const { NODE_ENV, NAME } = require('../config/env');
+const isDev = NODE_ENV === 'development';
+const titleCase = require('title-case');
 
-const extraPlugins = isDevelopment
-  ? [new webpack.HotModuleReplacementPlugin()] 
-  : [];
-
-const sourceMap = isDevelopment;
-
-module.exports = {
-  plugins: [
-    ...extraPlugins,
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-    }),
-  ],
-  mode: process.env.NODE_ENV,
-  target: 'web',
-  devtool: 'eval',
+const app = {
+  name: 'app',
   entry: {
     main: [
-      ...extraEntryFiles,
+      ...(isDev ? ['react-hot-loader/patch', 'webpack-hot-middleware/client?name=app'] : []),
       '@shopify/polaris/styles.css',
-      path.resolve(__dirname, '../client/index.js'),
+      path.resolve(__dirname, '../client/app/index.js'),
     ],
   },
   output: {
     filename: '[name].js',
-    path: path.resolve(__dirname, '../assets/client'),
-    publicPath: '/assets/client/',
+    path: path.resolve(__dirname, '../assets/app'),
+    publicPath: '/assets/app/',
     libraryTarget: 'var',
   },
+  mode: NODE_ENV,
+  target: 'web',
+  devtool: 'eval',
   module: {
     rules: [
       {
@@ -56,7 +44,7 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
-              sourceMap,
+              sourceMap: isDev,
               modules: true,
               importLoaders: 1,
               localIdentName: '[name]-[local]_[hash:base64:5]',
@@ -66,7 +54,7 @@ module.exports = {
             loader: 'postcss-loader',
             options: {
               plugins: () => autoprefixer(),
-              sourceMap,
+              sourceMap: isDev,
             },
           },
         ]
@@ -81,7 +69,7 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
-              sourceMap,
+              sourceMap: isDev,
               modules: true,
               importLoaders: 1,
               localIdentName: '[local]',
@@ -91,4 +79,138 @@ module.exports = {
       }
     ]
   },
-};
+  plugins: [
+    ...(isDev ? [new webpack.HotModuleReplacementPlugin()] : []),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
+    }),
+  ],
+}
+
+const site = {
+  name: 'site',
+  entry: {
+    main: [
+      ...(isDev ? ['react-hot-loader/patch', 'webpack-hot-middleware/client?name=site'] : []),
+      path.resolve(__dirname, '../client/site/index.js'),
+    ],
+  },
+  output: {
+    filename: '[name].js',
+    path: path.resolve(__dirname, '../assets/site'),
+    publicPath: '/assets/site/',
+    libraryTarget: 'var',
+  },
+  mode: NODE_ENV,
+  target: 'web',
+  devtool: 'eval',
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options : Object.assign({}, babel, {babelrc: false})
+        }
+      },
+      {
+        test: /\.css$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'style-loader',
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: isDev,
+              modules: true,
+              importLoaders: 1,
+              localIdentName: '[name]-[local]_[hash:base64:5]',
+            },
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: () => autoprefixer(),
+              sourceMap: isDev,
+            },
+          },
+        ]
+      }
+    ]
+  },
+  plugins: [
+    ...(isDev ? [new webpack.HotModuleReplacementPlugin()] : []),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
+    }),
+  ],
+}
+
+const scriptTag = {
+  name: 'script',
+  entry: {
+    main: [
+      path.resolve(__dirname, '../client/app/script-tag/index.js'),
+    ],
+  },
+  output: {
+    filename: '[name].js',
+    path: path.resolve(__dirname, '../assets/app/script-tag'),
+    publicPath: '/asssets/app/script-tag/',
+    libraryTarget: 'var'
+  },
+  mode: NODE_ENV,
+  target: 'web',
+  devtool: 'eval',
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options : Object.assign({}, babel, {babelrc: false})
+        }
+      },
+      {
+        test: /\.css$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'style-loader',
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: isDev,
+              modules: true,
+              importLoaders: 1,
+              localIdentName: '[name]-[local]_[hash:base64:5]',
+            },
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: () => autoprefixer(),
+              sourceMap: isDev,
+            },
+          },
+        ]
+      }
+    ]
+  },
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
+    }),
+  ],
+}
+
+module.exports = [
+  app,
+  site,
+  scriptTag
+]

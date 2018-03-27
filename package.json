@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "start mongod && cross-env NODE_ENV=development node ./server/index.js",
     "start": "cross-env NODE_ENV=production node ./server/index.js",
-    "build": "rimraf ./build && cross-env NODE_ENV=production webpack --config ./config/webpack.js"
+    "build": "rimraf ./assets && cross-env NODE_ENV=production webpack --config ./config/webpack.js"
   },
   "dependencies": {
     "@shopify/polaris": "^1.12.2",
@@ -43,6 +43,7 @@
     "react-hot-loader": "^4.0.0",
     "rimraf": "^2.6.2",
     "style-loader": "^0.20.3",
+    "title-case": "^2.1.1",
     "webpack": "^4.1.1",
     "webpack-cli": "^2.0.11",
     "webpack-dev-middleware": "^3.0.1",
