@@ -14,7 +14,6 @@
     "cookie-parser": "^1.4.3",
     "cross-env": "^5.1.4",
     "express": "^4.16.2",
-    "express-session": "^1.15.6",
     "hbs": "^4.0.1",
     "mongoose": "^5.0.11",
     "morgan": "^1.9.0",
@@ -23,7 +22,6 @@
     "react-dom": "^16.2.0",
     "react-livechat": "^1.0.22",
     "react-simple-state": "git+https://github.com/pmpomerleau/react-simple-state.git",
-    "serve-favicon": "^2.4.5",
     "shopify-api-node": "^2.11.0",
     "throng": "^4.0.0"
   },

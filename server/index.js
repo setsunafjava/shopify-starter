@@ -1,15 +1,12 @@
 const express = require('express');
-const favicon = require('serve-favicon');
 const path = require('path');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const session = require('express-session');
 const mongoose = require('mongoose');
 const connectMongo = require('connect-mongo');
 const throng = require('throng');
 const hbs = require('hbs');
-const MongoStore = connectMongo(session);
 const webpack = require('webpack');
 const webpackMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
@@ -27,9 +24,6 @@ const configureExpress = () => {
     app.set('view engine', 'hbs')
     hbs.registerHelper('json', function (context) { return JSON.stringify(context) })
 
-    // set favicon
-    app.use(favicon(path.join(__dirname, '../', 'assets', 'favicon.ico')))
-
     // set parsers
     app.use(bodyParser.json({verify:function(req,res,buf){req.rawBody=buf}})) // store rawBody
     app.use(bodyParser.json()) // json string -> {}
@@ -38,16 +32,6 @@ const configureExpress = () => {
 
     // set proxy
     app.enable('trust proxy')
-
-    // set sessions
-    //app.use(session({
-      //NAME,
-      //secret: process.env.SESSION_SECRET || 'development_session_secret',
-      //cookie: { secure: true, maxAge: (24 * 60 * 60 * 1000) },
-      //saveUninitialized: true,
-      //resave: false,
-      //store: new MongoStore({ mongooseConnection: mongoose.connection }),
-    //}))
 
     // logging
     app.use(logger('dev'));
@@ -88,6 +72,7 @@ const configureExpress = () => {
 
     // error handling
     app.use((error, req, res, next) => {
+      console.log('error', error)
       const { NODE_ENV } = require('../config/env')
       if (req.headers['accept'] === 'application/json') {
         // return an error json

@@ -35,7 +35,7 @@ class App extends State {
   saveSettings(settings) {
     if (this.loading) return console.log('ignored');
     this.easdk.startLoading();
-    axios.post(`${this.url}/api/save${window.location.search}`, settings)
+    axios.post(`${this.url}/api/settings${window.location.search}`, settings)
     .then(response => {
       this.easdk.stopLoading();
       this.setState({ settings: response.data, loading: false });

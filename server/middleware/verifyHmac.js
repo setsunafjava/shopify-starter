@@ -11,9 +11,7 @@ const verifyHmac = (request, response, next) => {
   const digest = useHeader ? 'base64' : 'hex';
   const generatedHmac = crypto.createHmac('sha256', SHOPIFY_API_SECRET).update(data).digest(digest);
 
-  if (hmac === generatedHmac) {
-    return next();
-  }
+  if (hmac === generatedHmac) return next();
 
   return next({status: 403, message: 'Invalid hmac'});
 }

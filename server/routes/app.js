@@ -1,11 +1,10 @@
 const express = require('express');
-const { verifyHmac, withShop } = require('../middleware');
+const { privateRoute } = require('../middleware');
 const { NAME, URL, SHOPIFY_API_KEY, LIVECHAT_API_KEY } = require('../../config/env');
 const router = express.Router();
 
-// secure route and load shop
-router.use(verifyHmac);
-router.use(withShop);
+// secure app and load shop
+router.use(privateRoute);
 
 // render the app
 router.get('/', (request, response, next) => {
