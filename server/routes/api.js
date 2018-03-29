@@ -11,6 +11,7 @@ router.get('/settings', publicRoute, (request, response, next) => {
 // private routes taking requests from embedded app
 router.post('/settings', privateRoute, (request, response, next) => {
   const { shop } = response.locals;
+  console.log(request.body)
   shop.settings = {
     ...shop.settings,
     ...request.body,

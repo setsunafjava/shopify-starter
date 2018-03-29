@@ -1,14 +1,17 @@
-const mongoose = require('mongoose');
-const ShopifyAPI = require('shopify-api-node');
+const mongoose = require('mongoose')
+const ShopifyAPI = require('shopify-api-node')
+const { DEFAULT_SETTINGS } = require('../../config/env')
+const { Schema } = mongoose
 
-Shop = mongoose.Schema({
+Shop = new Schema({
   _id: String,
   domain: String,
-  nonce: String,
-  token: { type: String, default: null },
-  settings: {
-    enabled: { type: Boolean, default: true },
-  }
+  token: { type: String,  default: null },
+  uninstalled_on: { type: Date, default: null },
+  installed_on: { type: Date, default: null },
+  trial_expiry: { type: Date, default: 0 },
+  last_charge: { type: Schema.Types.Mixed, default: null },
+  settings: { type: Schema.Types.Mixed, default: DEFAULT_SETTINGS }
 });
 
 const apiStore = {};

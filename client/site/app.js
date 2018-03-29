@@ -5,7 +5,7 @@ class App extends Component {
   render() {
     return (
       <div style={{padding: '20px'}}>
-        asdf
+        Test 
         <Chat /> 
       </div>
     );

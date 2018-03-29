@@ -10,17 +10,19 @@ class Settings extends Component {
   
   render() {
     const { settings, saveSettings } = this.props.state;
-    const { enabled } = settings;
+    const { enabled, color = false, check = false } = settings;
     return (
-      <SettingToggle
-        action={{
-          content: enabled ? 'Disable' : 'Enable',
-          onAction: () => { saveSettings({...settings, enabled: !enabled}) }
-        }}
-        enabled={enabled}
-      >
-        The hello world is <TextStyle variation="strong">{enabled ? 'enabled' : 'disabled'}</TextStyle>.
-      </SettingToggle>
+      <div>
+        <SettingToggle
+          action={{
+            content: enabled ? 'Disable' : 'Enable',
+            onAction: () => { saveSettings({...settings, enabled: !enabled}) }
+          }}
+          enabled={enabled}
+        >
+          The hello world app is <TextStyle variation="strong">{enabled ? 'enabled' : 'disabled'}</TextStyle>.
+        </SettingToggle>
+      </div>
     )
   }
 }

@@ -13,3 +13,7 @@
 .hello.open {
   max-height: 100px;
 }
+
+.hello.color {
+  color: blue;
+}

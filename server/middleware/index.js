@@ -1,7 +1,6 @@
 const verifyHmac = require('./verify-hmac');
 const withShop = require('./with-shop');
 const ensureOrigin = require('./ensure-origin');
-const sendLiquid = require('./send-liquid');
 const redirectToApp = require('./redirect-to-app');
 
 /* PUBLIC ROUTES
@@ -26,6 +25,5 @@ module.exports = {
   ensureOrigin,
   publicRoute,
   privateRoute,
-  sendLiquid,
   redirectToApp,
 };

@@ -61,7 +61,6 @@ const configureExpress = () => {
     // routes
     app.use('/install', routes.install);
     app.use('/webhook', routes.webhook);
-    app.use('/proxy', routes.proxy);
     app.use('/assets', routes.assets);
     app.use('/api', routes.api);
     app.use('/app', routes.app);
@@ -74,19 +73,15 @@ const configureExpress = () => {
 
     // error handling
     app.use((error, req, res, next) => {
-      console.log('error', error)
       const { NODE_ENV } = require('../config/env')
       if (req.headers['accept'] === 'application/json') {
         // return an error json
         if (NODE_ENV !== 'development') delete error.stack;
         res.status(error.statusCode || 500).send(error);
       } else {
-        // render the error page
+        // send back an error
         res.status(error.status || 500);
-        res.render('error', { 
-          message: error.message,
-          error: NODE_ENV === 'development' ? error : {},
-        });
+        res.send(error.stack);
       }
     });
 
@@ -107,6 +102,9 @@ const connectDatabase = () => {
 
 // start the server
 const startServer = () => {
+  const { Shop } = require('./models')
+  Shop.remove({}).then(res => {console.log('removed')})
+
   return new Promise((resolve, reject) => {
     const { PORT, NODE_ENV } = require('../config/env')
     const workers = process.env.WEB_CONCURRENCY || 1

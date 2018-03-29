@@ -1,5 +1,5 @@
-import style from './styles/main.css'
 import axios from 'axios'
+import style from './styles/main.css'
 import { URL } from '../../../config/env'
 
 axios.get(`${URL}/api/settings?shop=${window.location.hostname}`)
@@ -8,9 +8,14 @@ axios.get(`${URL}/api/settings?shop=${window.location.hostname}`)
     const hello = document.createElement('div');
     hello.innerHTML = 'Hello World!!';
     hello.classList.add(style.hello);
+    if (settings.color) {
+      hello.classList.add(style.color);
+    }
     document.body.prepend(hello)
     setTimeout(() => {
-      hello.classList.add(style.open)
+      requestAnimationFrame(() => {
+        hello.classList.add(style.open)
+      })
     })
   } 
 })
