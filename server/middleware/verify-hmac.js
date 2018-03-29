@@ -5,7 +5,7 @@ const verifyHmac = (request, response, next) => {
   const useHeader = !!request.get('X-Shopify-Hmac-SHA256');
   const hmac = useHeader ? request.get('X-Shopify-Hmac-SHA256') : request.query.hmac;
   const data = useHeader ? request.rawBody : Object.keys(request.query)
-    .filter(key => key !== 'hmac')
+    .filter(key => key !== 'hmac' && key !== 'charge_id')
     .map(key => `${key}=${Array(request.query[key]).join(',')}`)
     .sort().join('&');
 

@@ -5,7 +5,6 @@ const generateNonce = require('nonce')()
 const { Shop } = require('../models')
 const { NAME, URL } = require('../../config/env')
 const { SHOPIFY_API_KEY, SHOPIFY_API_SECRET, SHOPIFY_APP_SCOPE } = require('../../config/env')
-const { APPLICATION_CHARGE, RECURRING_CHARGE, FREE_TRIAL_DURATION } = require('../../config/env')
 const { privateRoute, redirectToApp } = require('../middleware')
 const router = express.Router()
 const fs = require('fs')
@@ -51,7 +50,7 @@ router.get('/', (request, response, next) => {
   }
 
   Shop.findByIdAndUpdate(shop, update, { upsert: true })
-  .then((shop) => response.redirect(authURL))
+  .then(() => response.redirect(authURL))
   .catch(next)
 })
 
@@ -122,49 +121,10 @@ router.get('/callback', (request, response, next) => {
   installWebhooks(webhooks)
 })
 
-// handle billing
+// redirect to billing
 router.get('/callback', (request, response, next) => {
-  // DO Billing last
-  const { shop } = response.locals
-  const { installed_on, uninstalled_on, trial_expiry, last_charge } = shop
-
-  if (!installed_on) {
-    shop.installed_on = new Date()
-    if (APPLICATION_CHARGE === 0) return next()
-    if (FREE_TRIAL_DURATION) {
-      shop.trial_expiry = new Date()
-      shop.trial_expiry.setDate(shop.trial_expiry.getDate() + FREE_TRIAL_DURATION)
-      return next()
-    } else {
-      // do some billing
-      const type = RECURRING_CHARGE ? 'recurringApplicationCharge' : 'applicationCharge'
-      const options = {
-        name: NAME,
-        test: true,
-        price: APPLICATION_CHARGE,
-        return_url: `https://${shop.domain}.myshopify.com/admin/apps/${SHOPIFY_API_KEY}`
-      }
-
-      shop.api[type].create(options)
-      .then(res => {
-        console.log('charge result')
-        console.log('activate by url redirect')
-        console.log(res)
-      })
-      .catch(err => {
-        console.log('charge error')
-        console.log(err)
-      })
-    }
-  }
-  next()
-})
-
-// post install done - redirect to app in admin
-router.use('/callback', (request, response, next) => {
-  const { shop } = response.locals
-  const redirect = `https://${shop.domain}.myshopify.com/admin/apps/${SHOPIFY_API_KEY}`
-  response.redirect(redirect)
+  const queryString = request.url.split('?')[1]
+  response.redirect(`/billing/install?${queryString}`)
 })
 
 module.exports = router
