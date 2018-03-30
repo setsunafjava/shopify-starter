@@ -105,7 +105,8 @@ const connectDatabase = () => {
 
 // start the server
 const startServer = () => {
-  //const { Shop } = require('./models')
+  const { Shop } = require('./models')
+  //Shop.find({}).then(shops => console.log(shops))
   //Shop.remove({}).then(res => {console.log('removed')})
 
   return new Promise((resolve, reject) => {

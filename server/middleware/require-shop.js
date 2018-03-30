@@ -1,6 +1,6 @@
 const { Shop } = require('../models');
 
-const withShop = (request, response, next) => {
+const requireShop = (request, response, next) => {
   let shop = request.query.shop || request.get('X-Shopify-Shop-Domain');
   if (!shop) return next({status: 500, message: 'Could not load shop'});
   shop = shop.split('.')[0];
@@ -11,4 +11,4 @@ const withShop = (request, response, next) => {
   });
 }
 
-module.exports = withShop;
+module.exports = requireShop;

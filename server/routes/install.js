@@ -1,15 +1,16 @@
 const express = require('express')
 const axios = require('axios')
 const DateDiff = require('date-diff')
+const fs = require('fs')
+const crypto = require('crypto')
+const path = require('path')
 const generateNonce = require('nonce')()
 const { Shop } = require('../models')
 const { NAME, URL } = require('../../config/env')
 const { SHOPIFY_API_KEY, SHOPIFY_API_SECRET, SHOPIFY_APP_SCOPE } = require('../../config/env')
 const { APPLICATION_CHARGE, RECURRING_CHARGE, FREE_TRIAL_DURATION } = require('../../config/env')
-const { privateRoute, redirectToApp } = require('../middleware')
+const { verifyHmac, requireShop } = require('../middleware');
 const router = express.Router()
-const fs = require('fs')
-const path = require('path')
 const avilableWebhooks = [ 
   'carts/create', 'carts/update', 
   'checkouts/create', 'checkouts/delete', 'checkouts/update', 
@@ -25,7 +26,7 @@ const avilableWebhooks = [
   'themes/create', 'themes/delete', 'themes/publish', 'themes/update'
 ]
 
-// install route
+// test installation route
 router.get('/', (request, response, next) => {
   const { shop } = request.query;
   if (!shop) {
@@ -46,8 +47,7 @@ router.get('/', (request, response, next) => {
     $setOnInsert: { 
       _id: shop, 
       domain: shop,
-    },
-    installed_on: new Date()
+    }
   }
 
   Shop.findByIdAndUpdate(shop, update, { upsert: true })
@@ -55,8 +55,8 @@ router.get('/', (request, response, next) => {
   .catch(next)
 })
 
-// secure the callback route and provide a shop
-router.use(privateRoute)
+router.use(verifyHmac)
+router.use(requireShop)
 
 // install permenant access token
 router.get('/callback', (request, response, next) => {
@@ -83,9 +83,17 @@ router.get('/callback', (request, response, next) => {
   const scriptEntry = path.resolve(__dirname, '../../client/app/script-tag/index.js')
   fs.readFile(scriptEntry, 'utf8', (error, data) => {
     if (error || data.trim() === '') return next()
+
+    // generate and add hmac query
+    const nonce = generateNonce()
+    const store = `${shop.domain}.myshopify.com`
+    const message = `nonce=${nonce}&shop=${store}`
+    const hmac = crypto.createHmac('sha256', SHOPIFY_API_SECRET).update(message).digest('hex')
+    const query = `nonce=${nonce}&hmac=${hmac}`
+
     shop.api.scriptTag.create({
       event: 'onload',
-      src: `${URL}/assets/app/script-tag/main.js`
+      src: `${URL}/assets/app/script-tag/main.js?${query}`
     })
     .then(() => next())
     .catch(next)
@@ -96,7 +104,7 @@ router.get('/callback', (request, response, next) => {
 router.get('/callback', (request, response, next) => {
   const { shop } = response.locals
   const webhooks = require('./webhook').stack.reduce((webhooks, endpoint) => {
-    const path = endpoint.route ? endpoint.route.path : null
+    const path = endpoint.route ? endpoint.route.path.substring(1) : null
     const isWehook = avilableWebhooks.indexOf(path) > -1
     const isProcessed =  webhooks.indexOf(path) > -1
     if (isWehook && !isProcessed) {
@@ -124,62 +132,70 @@ router.get('/callback', (request, response, next) => {
 // determine if billing is needed
 router.get('/callback', (request, response, next) => {
   const { shop } = response.locals
-  const { trial_ends_on, prepaid_ends_on, uninstalled_on, last_active_charge } = shop
+  const { trial_ends_on, prepaid_ends_on, installed_on, uninstalled_on, last_active_charge } = shop
   
   shop.trial_ends_on = null
   shop.prepaid_ends_on = null
   shop.uninstalled_on = null
+  shop.installed_on = new Date()
 
-  // if there's a recurring charge or it's not already paid check for free days
   if (APPLICATION_CHARGE && (!last_active_charge || RECURRING_CHARGE)) {
+    // if there's a recurring charge or 
+    // if it's not already paid check for free days
 
     let endsOn
     let daysLeft
 
-    // if trial days available and unused set trial expiry
-    if (APPLICATION_CHARGE && !trial_ends_on && FREE_TRIAL_DURATION > 0) {
-      endsOn = new Date(shop.installed_on)
-      endsOn.setDate(endsOn.getDate() + FREE_TRIAL_DURATION)
-      shop.trial_ends_on = endsOn
-    }
+    if (last_active_charge && (uninstalled_on || installed_on)) {
+      // if charged before then dont bother checking free trial 
+      // but check for left-over days from previous billing cycles
+      // note: if the uninstall date is null check the install date
+      // this can happen if the uninstall webhook isn't prompt
 
-    // if installed and uninstalled in the past
-    // check if it was uninstalled with remaining trial days
-    // if trial days remain, set a new trial expiry
-    if (trial_ends_on && uninstalled_on && !last_active_charge) {
-      daysLeft = new DateDiff(new Date(trial_ends_on), new Date(uninstalled_on))
-      daysLeft =  Math.max(0, daysLeft.days())
+      endsOn = new Date(last_active_charge.billing_on)
+      endsOn.setDate(endsOn.getDate() + 30)
+      daysLeft = new DateDiff(endsOn, new Date(uninstalled_on || installed_on))
+      daysLeft = Math.max(0, daysLeft.days())
       if (daysLeft > 0) {
         endsOn = new Date(shop.installed_on)
         endsOn.setDate(endsOn.getDate() + daysLeft)
-        shop.trial_ends_on = endsOn
-      }
-    }
-    
-    // if installed then uninstalled after being charged
-    // check to see if it was cancelled during this billing cycle
-    // if it was, add days to complete the cycle they already paid for
-    if (uninstalled_on && last_active_charge) {
-      endsOn = new Date(last_active_charge.billing_on)
-      endsOn.setDate(endsOn.getDate() + 30)
-      daysLeft = new DateDiff(endsOn, new Date(uninstalled_on))
-      daysLeft = Math.max(0, daysLeft.days())
-      if (daysLeft > 0) {
         shop.prepaid_ends_on = endsOn
+      }
+
+    } else if (FREE_TRIAL_DURATION > 0) {
+      
+      if (!trial_ends_on && !installed_on) {
+        // if never used add the trial
+
+        endsOn = new Date(shop.installed_on)
+        endsOn.setDate(endsOn.getDate() + FREE_TRIAL_DURATION)
+        shop.trial_ends_on = endsOn
+      } else if (trial_ends_on && (uninstalled_on || installed_on)) {
+        // if used before check the uninstall date
+        // note: if the uninstall date is null check the install date
+        // this can happen if the uninstall webhook isn't prompt
+
+        endsOn = new Date(trial_ends_on)
+        daysLeft = new DateDiff(new Date(endsOn), new Date(uninstalled_on || installed_on))
+        daysLeft =  Math.max(0, daysLeft.days())
+        if (daysLeft > 0) {
+          endsOn = new Date(shop.installed_on)
+          endsOn.setDate(endsOn.getDate() + daysLeft)
+          shop.trial_ends_on = endsOn
+        }
       }
     }
   }
 
   shop.save()
   .then((shop) => {
-    if (shop.trial_ends_on || shop.prepaid_ends_on || !!APPLICATION_CHARGE) {
+    if (shop.trial_ends_on || shop.prepaid_ends_on || !APPLICATION_CHARGE) {
       return response.redirect(shop.app_url)
     } else {
       const queryString = request.url.split('?')[1]
       response.redirect(`/billing/create?${queryString}`)
     }
   })
-
 })
 
 module.exports = router

@@ -1,17 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const { publicRoute, privateRoute } = require('../middleware');
+const { verifyHmac, requireShop } = require('../middleware');
 
-// public routes taking requests from stores
-router.get('/settings', publicRoute, (request, response, next) => {
+router.use(verifyHmac)
+router.use(requireShop)
+
+router.get('/settings', (request, response, next) => {
   const { shop } = response.locals
   response.json(shop.settings)
 })
 
-// private routes taking requests from embedded app
-router.post('/settings', privateRoute, (request, response, next) => {
+router.post('/settings', (request, response, next) => {
   const { shop } = response.locals;
-  console.log(request.body)
   shop.settings = {
     ...shop.settings,
     ...request.body,

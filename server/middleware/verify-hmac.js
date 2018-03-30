@@ -12,7 +12,14 @@ const verifyHmac = (request, response, next) => {
   const digest = useHeader ? 'base64' : 'hex';
   const generatedHmac = crypto.createHmac('sha256', SHOPIFY_API_SECRET).update(data).digest(digest);
 
-  if (hmac === generatedHmac) return next();
+
+  if (hmac === generatedHmac) {
+    response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    response.header("Access-Control-Allow-Origin", '*');
+    return next();
+  }
+
+  
 
   return next({status: 403, message: 'Invalid hmac'});
 }

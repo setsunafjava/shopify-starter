@@ -63,5 +63,7 @@ const initialState = {
   ...window.data,
 };
 
+console.log(window.data)
+
 const app = new App(initialState);
 export default app;

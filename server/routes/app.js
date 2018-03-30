@@ -1,10 +1,10 @@
 const express = require('express');
-const { privateRoute } = require('../middleware');
 const { NAME, SHOPIFY_API_KEY, LIVECHAT_API_KEY } = require('../../config/env');
 const router = express.Router();
+const { verifyHmac, requireShop } = require('../middleware');
 
-// secure app and load shop
-router.use(privateRoute);
+router.use(verifyHmac)
+router.use(requireShop)
 
 // render the app
 router.get('/', (request, response, next) => {
@@ -22,6 +22,7 @@ router.get('/', (request, response, next) => {
       prepaid_days_left,
       active,
       settings,
+      shop: shop.toObject()
     }
 
     return response.render('app', {data})

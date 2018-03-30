@@ -1,13 +1,16 @@
 const express = require('express')
 const path = require('path')
 const router = express.Router()
-const { publicRoute, privateRoute } = require('../middleware')
+const { verifyHmac, requireShop } = require('../middleware');
 
 router.use('/site', (request, response, next) => {
   response.sendFile(request.path, { root: path.join(__dirname, '/../../assets/site/')})
 })
 
-router.use('/app/script-tag', publicRoute, (request, response, next) => {
+router.use(verifyHmac)
+router.use(requireShop)
+
+router.use('/app/script-tag', (request, response, next) => {
   const { shop } = response.locals
   shop.isActive()
   .then(active => {
@@ -21,7 +24,7 @@ router.use('/app/script-tag', publicRoute, (request, response, next) => {
   })
 })
 
-router.use('/app/proxies', privateRoute, (request, response, next) => {
+router.use('/app/proxies', (request, response, next) => {
   const { shop } = response.locals
   response.set('Content-Type', 'application/liquid')
 
@@ -37,7 +40,7 @@ router.use('/app/proxies', privateRoute, (request, response, next) => {
   })
 })
 
-router.use('/app', privateRoute, (request, response, next) => {
+router.use('/app', (request, response, next) => {
   response.sendFile(request.path, { root: path.join(__dirname, '/../../assets/app/')})
 })
 
