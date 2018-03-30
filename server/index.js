@@ -105,8 +105,8 @@ const connectDatabase = () => {
 
 // start the server
 const startServer = () => {
-  const { Shop } = require('./models')
-  Shop.remove({}).then(res => {console.log('removed')})
+  //const { Shop } = require('./models')
+  //Shop.remove({}).then(res => {console.log('removed')})
 
   return new Promise((resolve, reject) => {
     const { PORT, NODE_ENV } = require('../config/env')

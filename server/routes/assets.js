@@ -8,12 +8,33 @@ router.use('/site', (request, response, next) => {
 })
 
 router.use('/app/script-tag', publicRoute, (request, response, next) => {
-  response.sendFile(request.path, { root: path.join(__dirname, '/../../assets/app/script-tag/')})
+  const { shop } = response.locals
+  shop.isActive()
+  .then(active => {
+    if (active) {
+      return response.sendFile(request.path, { root: path.join(__dirname, '/../../assets/app/script-tag/')})
+    } else {
+      response.status(403)
+      response.send('App not active')
+      return       
+    }
+  })
 })
 
 router.use('/app/proxies', privateRoute, (request, response, next) => {
+  const { shop } = response.locals
   response.set('Content-Type', 'application/liquid')
-  response.sendFile(request.path, { root: path.join(__dirname, '/../../assets/app/proxies/')})
+
+  shop.isActive()
+  .then(active => {
+    if (active) {
+      return response.sendFile(request.path, { root: path.join(__dirname, '/../../assets/app/proxies/')})
+    } else {
+      response.status(403)
+      response.send('App not active')
+      return       
+    }
+  })
 })
 
 router.use('/app', privateRoute, (request, response, next) => {
