@@ -13,6 +13,7 @@ router.post('/app/uninstalled', (request, response, next) => {
 
   // set the uninstallation date and save
   shop.uninstalled_on = new Date()
+  //shop.remove()
   shop.save()
 
   // return status 200, done synchronously

@@ -4,7 +4,7 @@ const router = express.Router()
 const { verifyHmac, requireShop } = require('../middleware');
 
 // serve any public files needed for the website
-router.use('/site', (request, response, next) => {
+router.get('/site', (request, response, next) => {
   response.sendFile(request.path, { root: path.join(__dirname, '/../../assets/site/')})
 })
 
@@ -13,7 +13,7 @@ router.use(verifyHmac)
 router.use(requireShop)
 
 // serve the script-tag if the account is active
-router.use('/app/script-tag', (request, response, next) => {
+router.get('/app/script-tag', (request, response, next) => {
   const { shop } = response.locals
   shop.isActive()
   .then(active => {
@@ -27,7 +27,7 @@ router.use('/app/script-tag', (request, response, next) => {
 })
 
 // serve proxies if the account is active
-router.use('/app/proxies', (request, response, next) => {
+router.get('/app/proxies', (request, response, next) => {
   const { shop } = response.locals
   shop.isActive()
   .then(active => {
@@ -44,7 +44,7 @@ router.use('/app/proxies', (request, response, next) => {
 })
 
 // serve the embedded app assets
-router.use('/app', (request, response, next) => {
+router.get('/app', (request, response, next) => {
   const root = path.join(__dirname, '/../../assets/app/')
   response.sendFile(request.path, { root })
 })

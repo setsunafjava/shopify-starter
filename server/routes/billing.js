@@ -9,8 +9,9 @@ router.use(verifyHmac)
 router.use(requireShop)
 
 // create a new charge for the shop and get confirmation
-router.get('/create', (request, response, next) => {
+router.get('/confirm', (request, response, next) => {
   const { shop } = response.locals
+  const { redirect } = request.query
   const chargeType = RECURRING_CHARGE ? 'recurringApplicationCharge' : 'applicationCharge'
 
   const options = {
@@ -22,16 +23,17 @@ router.get('/create', (request, response, next) => {
 
   shop.api[chargeType].create(options)
   .then(({ confirmation_url }) => {
-    console.log(confirmation_url)
-    return response.redirect(confirmation_url)
+    if (redirect) {
+      return response.redirect(confirmation_url)
+    } else {
+      return response.send({ confirmation_url })
+    }
   })
-  .catch(error => {
-    next(error)
-  })
+  .catch(next)
 })
 
 // activate the charge, save it if accepted, send to app
-router.use('/activate', (request, response, next) => {
+router.get('/activate', (request, response, next) => {
   const { shop } = response.locals
   const chargeId = request.query.charge_id
   const chargeApi = RECURRING_CHARGE ? 'recurringApplicationCharge' : 'applicationCharge'

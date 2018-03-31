@@ -195,7 +195,7 @@ router.get('/callback', (request, response, next) => {
     }
   }
 
-  // save the shop then redirect to create a charge
+  // save the shop then redirect to confirm a charge
   // or redirect to the app if a charge isn't needed (yet or at all)
   shop.save()
   .then((shop) => {
@@ -203,7 +203,8 @@ router.get('/callback', (request, response, next) => {
       return response.redirect(shop.app_url)
     } else {
       const queryString = request.url.split('?')[1]
-      response.redirect(`/billing/create?${queryString}`)
+      response.set('Content-Type', 'text/html')
+      response.redirect(`/billing/confirm?redirect=true&${queryString}`)
     }
   })
 })

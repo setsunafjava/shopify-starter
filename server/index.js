@@ -85,7 +85,6 @@ const configureExpress = () => new Promise((resolve, reject) => {
 
 // connect the database
 const connectDatabase = () => new Promise((resolve, reject) => {
-
   const { DATABASE } = require('../config/env')
   mongoose.connect(DATABASE)
   mongoose.Promise = require('bluebird')
