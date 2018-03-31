@@ -1,6 +1,10 @@
 const crypto = require('crypto');
 const { SHOPIFY_API_SECRET } = require('../../config/env');
 
+// calculates and verifies hmac messages sent along with requests
+// from various shopify and application routes
+// also allows cross origin domain requests if the originating host
+// matches the shop provided in the hmac validation params
 const verifyHmac = (request, response, next) => {
   const useHeader = !!request.get('X-Shopify-Hmac-SHA256');
   const hmac = useHeader ? request.get('X-Shopify-Hmac-SHA256') : request.query.hmac || request.query.signature;
@@ -12,15 +16,21 @@ const verifyHmac = (request, response, next) => {
   const digest = useHeader ? 'base64' : 'hex';
   const generatedHmac = crypto.createHmac('sha256', SHOPIFY_API_SECRET).update(data).digest(digest);
 
-
   if (hmac === generatedHmac) {
-    response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    response.header("Access-Control-Allow-Origin", '*');
+    // if the request origin is the same as the shop domain
+    // it's likely script-tag so setup for CORS requests
+    const origin = request.headers.origin
+    const shop = request.query.shop || request.get('X-Shopify-Shop-Domain')
+    if (`https://${shop}` === origin) {
+      response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+      response.header("Access-Control-Allow-Origin", origin);
+    }
+
+    // authorized, go to next route
     return next();
   }
 
-  
-
+  // unauthorized throw an error
   return next({status: 403, message: 'Invalid hmac'});
 }
 

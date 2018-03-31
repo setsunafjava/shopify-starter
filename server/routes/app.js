@@ -1,12 +1,14 @@
-const express = require('express');
-const { NAME, SHOPIFY_API_KEY, LIVECHAT_API_KEY } = require('../../config/env');
-const router = express.Router();
-const { verifyHmac, requireShop } = require('../middleware');
+const express = require('express')
+const env = require('../../config/env')
+const { verifyHmac, requireShop } = require('../middleware')
+const { NODE_ENV, NAME, SHOPIFY_API_KEY, LIVECHAT_API_KEY } = env
+const router = express.Router()
 
+// protect routes, require shop
 router.use(verifyHmac)
 router.use(requireShop)
 
-// render the app
+// render the app with required data
 router.get('/', (request, response, next) => {
   const { shop } = response.locals
   const { domain, settings, prepaid_days_left, trial_days_left } = shop
@@ -22,11 +24,15 @@ router.get('/', (request, response, next) => {
       prepaid_days_left,
       active,
       settings,
-      shop: shop.toObject()
+    }
+
+    if (NODE_ENV === 'development') {
+      // include all data for debugging
+      data.debug = { env, shop: shop.toObject() }
     }
 
     return response.render('app', {data})
   })
 })
 
-module.exports = router;
+module.exports = router

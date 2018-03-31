@@ -10,6 +10,8 @@
     <script type="text/javascript" src="https://cdn.shopify.com/s/assets/external/app.js"></script>
     <script type="text/javascript">window.data = {{{json data}}}</script>
     <script>
+      // append the script tag with the search query 
+      // so that fetching is can be hmac verified
       var script = document.createElement('script');
       script.src = '/assets/app/main.js' + window.location.search;
       document.head.appendChild(script)

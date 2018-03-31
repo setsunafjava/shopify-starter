@@ -13,121 +13,110 @@ const webpackHotMiddleware = require('webpack-hot-middleware')
 const app = express()
 
 // configure express server
-const configureExpress = () => {
-  return new Promise((resolve, reject) => {
-    const webpackConfig = require('../config/webpack')
-    const { NAME, NODE_ENV } = require('../config/env')
-    const routes = require('./routes')
+const configureExpress = () => new Promise((resolve, reject) => {
 
-    // set view engine
-    app.set('views', path.join(__dirname, 'views'))
-    app.set('view engine', 'hbs')
-    hbs.registerHelper('json', function (context) { return JSON.stringify(context) })
+  const webpackConfig = require('../config/webpack')
+  const { NAME, NODE_ENV } = require('../config/env')
+  const routes = require('./routes')
 
-    // set parsers
-    app.use(bodyParser.json({verify:function(req,res,buf){req.rawBody=buf}})) // store rawBody
-    app.use(bodyParser.json()) // json string -> {}
-    app.use(bodyParser.urlencoded({ extended: false })) // form data -> req.body {}
-    app.use(cookieParser()) // cookies string -> req.cookies {}
+  // set view engine
+  app.set('views', path.join(__dirname, 'views'))
+  app.set('view engine', 'hbs')
+  hbs.registerHelper('json', function (context) { return JSON.stringify(context) })
 
-    // set proxy
-    app.enable('trust proxy')
+  // set parsers
+  app.use(bodyParser.json({verify:function(req,res,buf){req.rawBody=buf}})) // store rawBody
+  app.use(bodyParser.json()) // json string -> {}
+  app.use(bodyParser.urlencoded({ extended: false })) // form data -> req.body {}
+  app.use(cookieParser()) // cookies string -> req.cookies {}
 
-    // logging
-    app.use(logger('dev'))
+  // set proxy
+  app.enable('trust proxy')
 
-    // serve clients (react app and site) with webpack in development
-    if (NODE_ENV === 'development') {
-      const compiler = webpack(webpackConfig)
-      
-      app.use(webpackMiddleware(compiler, {
-          hot: true,
-          inline: true,
-          stats: {
-            colors: true,
-            hash: false,
-            timings: true,
-            chunks: false,
-            chunkModules: false,
-            modules: false,
-          },
-        }))
+  // logging
+  app.use(logger('dev'))
 
-      webpackConfig.map(config => {
-        app.use(webpackHotMiddleware(compiler, { name: config.name, dynamicPublicPath: true }))
-      })
+  if (NODE_ENV === 'development') {
+    // serve app and website with webpack in development
+    const compiler = webpack(webpackConfig)
+    const config = {
+      hot: true,
+      inline: true,
+      stats: {
+        colors: true,
+        hash: false,
+        timings: true,
+        chunks: false,
+        chunkModules: false,
+        modules: false
+      }
     }
 
-    // routes
-    app.use('/install', routes.install)
-    app.use('/billing', routes.billing)
-    app.use('/webhook', routes.webhook)
-    app.use('/assets', routes.assets)
-    app.use('/api', routes.api)
-    app.use('/app', routes.app)
-    app.use('/', routes.site)
+    app.use(webpackMiddleware(compiler, config))
 
-    // 404
-    app.use((req, res, next) => {
-      next({status: 404, message: 'Not Found'})
+    webpackConfig.map(({ name }) => {
+      const opts = { name, dynamicPublicPath: true }
+      app.use(webpackHotMiddleware(compiler, opts))
     })
+  }
 
-    // error handling
-    app.use((error, req, res, next) => {
-      const { NODE_ENV } = require('../config/env')
-      if (req.headers['accept'] === 'application/json') {
-        // return an error json
-        console.log(error)
-        if (NODE_ENV !== 'development') delete error.stack
-        res.status(error.statusCode || 500).send(error)
-      } else {
-        // send back an error
-        console.log(error)
-        res.status(error.status || 500)
-        res.send(error.stack)
-      }
-    })
+  // setup the routes
+  app.use('/install', routes.install)
+  app.use('/billing', routes.billing)
+  app.use('/webhook', routes.webhook)
+  app.use('/assets', routes.assets)
+  app.use('/api', routes.api)
+  app.use('/app', routes.app)
+  app.use('/', routes.site)
 
-    return resolve()
+  // handle unmatched routes
+  app.use((req, res, next) => {
+    next({status: 404, message: 'Not Found'})
   })
-}
 
-// configure database
-const connectDatabase = () => {
-  return new Promise((resolve, reject) => {
-    const { DATABASE } = require('../config/env')
-    mongoose.connect(DATABASE)
-    mongoose.Promise = require('bluebird')
-    mongoose.connection.on('error', reject)
-    mongoose.connection.on('connected', resolve)
+  // error handling
+  app.use((error, req, res, next) => {
+    res.status(error.status || 500)
+    res.send(error.message)
   })
-}
+
+  return resolve()
+})
+
+// connect the database
+const connectDatabase = () => new Promise((resolve, reject) => {
+
+  const { DATABASE } = require('../config/env')
+  mongoose.connect(DATABASE)
+  mongoose.Promise = require('bluebird')
+  mongoose.connection.on('error', reject)
+  mongoose.connection.on('connected', resolve)
+})
 
 // start the server
-const startServer = () => {
-  const { Shop } = require('./models')
-  //Shop.find({}).then(shops => console.log(shops))
-  //Shop.remove({}).then(res => {console.log('removed')})
+const startServer = () => new Promise((resolve, reject) => {
+  const { PORT, NODE_ENV } = require('../config/env')
+  const workers = process.env.WEB_CONCURRENCY || 1
+  const lifetime = Infinity
 
-  return new Promise((resolve, reject) => {
-    const { PORT, NODE_ENV } = require('../config/env')
-    const workers = process.env.WEB_CONCURRENCY || 1
-    const lifetime = Infinity
-    const start = () => {
-      app.set('port', PORT)
-      app.listen(PORT, () => {
-        console.log(`server started at: http://localhost:${PORT}`)
-        return resolve()
-      })
-    }
-    if (NODE_ENV === 'development') start()
-    else throng({ workers, lifetime }, start)
-  })
-}
+  const start = () => {
+    app.set('port', PORT)
+    app.listen(PORT, () => {
+      console.log(`server started at: http://localhost:${PORT}`)
+      return resolve()
+    })
+  }
+
+  if (NODE_ENV === 'development') {
+    start()
+  } else {
+    throng({ workers, lifetime }, start)
+  }
+})
 
 configureExpress()
 .then(connectDatabase)
 .then(startServer)
 .catch(error => {
-  console.log('error: ', error)
+  console.log('error starting server: ', error)
 })

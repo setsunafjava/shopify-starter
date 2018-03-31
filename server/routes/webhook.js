@@ -3,13 +3,21 @@ const router = express.Router()
 const ShopifyAPI = require('shopify-api-node')
 const { verifyHmac, requireShop } = require('../middleware');
 
+// protect routes, require shop
 router.use(verifyHmac)
 router.use(requireShop)
 
+// triggered when app is uninstalled
 router.post('/app/uninstalled', (request, response, next) => {
   const { shop } = response.locals
+
+  // set the uninstallation date and save
   shop.uninstalled_on = new Date()
   shop.save()
+
+  // return status 200, done synchronously
+  // to avoid any duplicate webhook calls
+  // as shopify has a timeout for a response
   response.sendStatus(200)
 })
 

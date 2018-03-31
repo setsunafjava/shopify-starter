@@ -6,7 +6,7 @@ const crypto = require('crypto')
 const path = require('path')
 const generateNonce = require('nonce')()
 const { Shop } = require('../models')
-const { NAME, URL } = require('../../config/env')
+const { NODE_ENV, NAME, URL } = require('../../config/env')
 const { SHOPIFY_API_KEY, SHOPIFY_API_SECRET, SHOPIFY_APP_SCOPE } = require('../../config/env')
 const { APPLICATION_CHARGE, RECURRING_CHARGE, FREE_TRIAL_DURATION } = require('../../config/env')
 const { verifyHmac, requireShop } = require('../middleware');
@@ -26,16 +26,18 @@ const avilableWebhooks = [
   'themes/create', 'themes/delete', 'themes/publish', 'themes/update'
 ]
 
-// test installation route
+// dev installation route, disabled in production
 router.get('/', (request, response, next) => {
   const { shop } = request.query;
-  if (!shop) {
-    return next({
-      status: 422, 
-      message: 'Missing shop parameter'
-    })
+  
+  // handle errors
+  if (NODE_ENV !== 'development') {
+    return next({ status: 403, message: 'Forbidden' })
+  } else if (!shop) {
+    return next({ status: 422,  message: 'Missing shop param' })
   }
 
+  // generage install authorization url
   const nonce = generateNonce()
   const authURL = `https://${shop}.myshopify.com/admin/oauth/authorize`
     + `?client_id=${SHOPIFY_API_KEY}`
@@ -43,35 +45,32 @@ router.get('/', (request, response, next) => {
     + `&state=${nonce}`
     + `&redirect_uri=${URL}/install/callback`
 
-  const update = { 
-    $setOnInsert: { 
-      _id: shop, 
-      domain: shop,
-    }
-  }
-
+  // ensure shop in db
+  const update = { $setOnInsert: { _id: shop, domain: shop } }
   Shop.findByIdAndUpdate(shop, update, { upsert: true })
   .then(() => response.redirect(authURL))
   .catch(next)
 })
 
+// protect routes, require shop
 router.use(verifyHmac)
 router.use(requireShop)
 
 // install permenant access token
 router.get('/callback', (request, response, next) => {
-  const { code } = request.query
   const { shop } = response.locals
+
+  // get the auth token
   const authURL = `https://${shop.domain}.myshopify.com/admin/oauth/access_token`
   axios.post(authURL, {
     client_id: SHOPIFY_API_KEY,
     client_secret: SHOPIFY_API_SECRET,
-    code,
+    code: request.query.code,
   })
   .then((result) => {
+    // save to the db
     shop.token = result.data.access_token
-    shop.save()
-    .then(() => next())
+    shop.save().then(() => next())
     .catch(next)
   })
   .catch(next)
@@ -80,6 +79,9 @@ router.get('/callback', (request, response, next) => {
 // install scriptTag
 router.get('/callback', (request, response, next) => {
   const { shop } = response.locals
+
+  // check if the script-tag entry file exists
+  // if it does and isn't empty setup the script-tag
   const scriptEntry = path.resolve(__dirname, '../../client/app/script-tag/index.js')
   fs.readFile(scriptEntry, 'utf8', (error, data) => {
     if (error || data.trim() === '') return next()
@@ -91,6 +93,7 @@ router.get('/callback', (request, response, next) => {
     const hmac = crypto.createHmac('sha256', SHOPIFY_API_SECRET).update(message).digest('hex')
     const query = `nonce=${nonce}&hmac=${hmac}`
 
+    // install the script-tag
     shop.api.scriptTag.create({
       event: 'onload',
       src: `${URL}/assets/app/script-tag/main.js?${query}`
@@ -100,9 +103,12 @@ router.get('/callback', (request, response, next) => {
   })
 })
 
-// install webhooks using shop.api
+// install webhooks
 router.get('/callback', (request, response, next) => {
   const { shop } = response.locals
+
+  // get all the webhook routes currently defined in the webhook route
+  // if the route matches an available shopify webhook, add it to an array
   const webhooks = require('./webhook').stack.reduce((webhooks, endpoint) => {
     const path = endpoint.route ? endpoint.route.path.substring(1) : null
     const isWehook = avilableWebhooks.indexOf(path) > -1
@@ -113,6 +119,8 @@ router.get('/callback', (request, response, next) => {
     return webhooks
   }, [])
 
+  // recursive function to install 
+  // all the defined and valid webhooks
   const installWebhooks = (webhooks) => {
     if (!webhooks.length) return next()
     const route = webhooks[0]
@@ -187,6 +195,8 @@ router.get('/callback', (request, response, next) => {
     }
   }
 
+  // save the shop then redirect to create a charge
+  // or redirect to the app if a charge isn't needed (yet or at all)
   shop.save()
   .then((shop) => {
     if (shop.trial_ends_on || shop.prepaid_ends_on || !APPLICATION_CHARGE) {

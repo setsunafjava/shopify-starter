@@ -1,5 +1,2 @@
-const Shop = require('./shop');
-
-module.exports = {
-  Shop
-};
+const Shop = require('./shop')
+module.exports = { Shop }

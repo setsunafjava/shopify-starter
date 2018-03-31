@@ -3,35 +3,38 @@ const path = require('path')
 const router = express.Router()
 const { verifyHmac, requireShop } = require('../middleware');
 
+// serve any public files needed for the website
 router.use('/site', (request, response, next) => {
   response.sendFile(request.path, { root: path.join(__dirname, '/../../assets/site/')})
 })
 
+// protect routes, require shop
 router.use(verifyHmac)
 router.use(requireShop)
 
+// serve the script-tag if the account is active
 router.use('/app/script-tag', (request, response, next) => {
   const { shop } = response.locals
   shop.isActive()
   .then(active => {
     if (active) {
-      return response.sendFile(request.path, { root: path.join(__dirname, '/../../assets/app/script-tag/')})
+      const root = path.join(__dirname, '/../../assets/app/script-tag/')
+      return response.sendFile(request.path, { root })
     } else {
-      response.status(403)
-      response.send('App not active')
-      return       
+      return response.status(403).send('App not active')
     }
   })
 })
 
+// serve proxies if the account is active
 router.use('/app/proxies', (request, response, next) => {
   const { shop } = response.locals
-  response.set('Content-Type', 'application/liquid')
-
   shop.isActive()
   .then(active => {
     if (active) {
-      return response.sendFile(request.path, { root: path.join(__dirname, '/../../assets/app/proxies/')})
+      const root = path.join(__dirname, '/../../assets/app/proxies/')
+      response.set('Content-Type', 'application/liquid')
+      return response.sendFile(request.path, { root })
     } else {
       response.status(403)
       response.send('App not active')
@@ -40,8 +43,10 @@ router.use('/app/proxies', (request, response, next) => {
   })
 })
 
+// serve the embedded app assets
 router.use('/app', (request, response, next) => {
-  response.sendFile(request.path, { root: path.join(__dirname, '/../../assets/app/')})
+  const root = path.join(__dirname, '/../../assets/app/')
+  response.sendFile(request.path, { root })
 })
 
 module.exports = router
