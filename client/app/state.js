@@ -2,31 +2,42 @@ import { State } from 'react-simple-state'
 import axios from 'axios'
 
 class App extends State {
+
+  /* @desc construct the state and bind any functions
+   * that are going to be passed to DOM elements
+  */
   constructor(state = {}) {
     super(state)
     this.loadEASDK = this.loadEASDK.bind(this)
     this.loadLCSDK = this.loadLCSDK.bind(this)
     this.saveSettings = this.saveSettings.bind(this)
     this.createCharge = this.createCharge.bind(this)
+    this.dismissStatus = this.dismissStatus.bind(this)
   }
 
+  /* @param {DOM Element} comp - EASDK React Component
+   * @param {object} comp.easdk - The EASDK API
+   * @desc sets the easdk to state
+  */
   loadEASDK({ easdk = null }) {
     if (this.easdk || !easdk) return 
     this.setState({ easdk })
     this.easdk.stopLoading()
-    console.log(this.easdk)
   }
 
-  loadLCSDK({ lcsdk = null }) {
+  /* @param {object} lcsdk: The LiveChat SDK
+   * @desc sets the lcsdk to state once it's loaded properly
+   * note: lcsdk has a bug. it passes lcsdk object before underlying functions are ready
+   * a times is used to check required functions, when they're ready we save the lcsdk to state
+  */
+  loadLCSDK(lcsdk) {
     if (this.lcsdk || !lcsdk) return
-    // there's a bug with lcsdk where it's available before the underlying functions are ready
-    // set a timer and keep checking until the parent functions are ready
     const timer = setInterval(() => {
       if (window.LC_Invite && window.LC_API) {
-        const data = {
-          app: this.app,
-          store: this.store,
-        }
+        const data = [
+          { name: 'app', value: this.app },
+          { name: 'store', value: this.store }
+        ]
         clearInterval(timer)
         this.setState({ lcsdk })
         this.lcsdk.set_custom_variables(data)
@@ -34,8 +45,12 @@ class App extends State {
     }, 200)
   }
 
+  /* @param {object} settings: 
+   * @desc save the settings to the server, once confirmation
+   * that the save was succesfull, update the local state settings
+  */
   saveSettings(settings) {
-    if (this.loading) return console.log('ignored')
+    if (this.loading) return
     this.easdk.startLoading()
     axios.post(`/api/settings${window.location.search}`, settings)
     .then(response => {
@@ -48,34 +63,24 @@ class App extends State {
     })
   }
 
+  /* @desc gets then redirects the user to charge confirmation page
+  */
   createCharge() {
+    this.setState({loading: true})
     axios.get(`/billing/confirm${window.location.search}`)
     .then(({ data: { confirmation_url } }) => {
+      this.setState({loading: false})
       this.easdk.redirect(confirmation_url)
     })
-    .catch(error => {
-      console.log(error)
-    })
+    .catch(error => this.setState({loading: false}))
+  }
+
+  /* @desc gets then redirects the user to charge confirmation page
+  */
+  dismissStatus() {
+    this.setState({ statusDismissed: true })
   }
 }
 
-const initialState = {
-  app: null,
-  store: null,
-  shopifyKey: null,
-  livechatKey: null,
-  settings: {
-    enabled: false,
-    ...window.data.settings,
-  },
-  loading: false,
-  error: null,
-  easdk: null,
-  lcsdk: null,
-  ...window.data,
-}
-
-console.log(window.data)
-
-const app = new App(initialState)
+const app = new App(window.data)
 export default app

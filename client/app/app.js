@@ -8,11 +8,9 @@ class App extends Component {
   render() {
     return (
       <EASDK>
-        <div style={{padding: '20px'}}>
-          <Status />
-          <Settings />
-          <Chat /> 
-        </div>
+        <Status />
+        <Settings />
+        <Chat /> 
       </EASDK>
     )
   }

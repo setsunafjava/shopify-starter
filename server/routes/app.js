@@ -14,7 +14,7 @@ router.get('/', (request, response, next) => {
   const { domain, settings, prepaid_days_left, trial_days_left } = shop
 
   shop.isActive()
-  .then(active => {
+  .then(isActive => {
     const data = {
       app: NAME,
       store: domain,
@@ -22,7 +22,7 @@ router.get('/', (request, response, next) => {
       livechatKey: LIVECHAT_API_KEY,
       trial_days_left,
       prepaid_days_left,
-      active,
+      isActive,
       settings,
     }
 

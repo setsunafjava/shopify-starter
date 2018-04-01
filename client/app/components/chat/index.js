@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import LiveChat from 'react-livechat';
-import { withState } from 'react-simple-state';
-import state from '../../state';
+import React, { Component } from 'react'
+import LiveChat from 'react-livechat'
+import { withState } from 'react-simple-state'
+import state from '../../state'
 
 const Chat = ({ state: { livechatKey, lcsdk, loadLCSDK } }) => (
   <LiveChat 
@@ -9,6 +9,6 @@ const Chat = ({ state: { livechatKey, lcsdk, loadLCSDK } }) => (
     license={livechatKey} 
     onChatLoaded={loadLCSDK}
   />
-);
+)
 
-export default withState({ state })(Chat);
+export default withState({ state })(Chat)

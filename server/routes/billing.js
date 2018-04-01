@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const { NAME, URL, NODE_ENV } = require('../../config/env')
-const { APPLICATION_CHARGE, RECURRING_CHARGE } = require('../../config/env')
+const { APPLICATION_CHARGE, RECURRING_CHARGE, TEST_BILLING } = require('../../config/env')
 const { verifyHmac, requireShop } = require('../middleware');
 
 // protect routes, require shop
@@ -18,7 +18,7 @@ router.get('/confirm', (request, response, next) => {
     name: NAME,
     price: APPLICATION_CHARGE,
     return_url: `${URL}/billing/activate?${request.url.split('?')[1]}`,
-    test: NODE_ENV === 'development'
+    test: TEST_BILLING
   }
 
   shop.api[chargeType].create(options)

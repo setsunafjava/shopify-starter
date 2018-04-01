@@ -1,8 +1,7 @@
-import './style.css';
-import * as React from 'react';
-import { render } from 'react-dom';
-import { AppContainer } from 'react-hot-loader';
-import App from './app';
+import * as React from 'react'
+import { render } from 'react-dom'
+import { AppContainer } from 'react-hot-loader'
+import App from './app'
 
 function renderApp() {
   render(
@@ -10,10 +9,10 @@ function renderApp() {
       <App/>
     </AppContainer>,
     document.getElementById('root')
-  );
+  )
 }
 
-renderApp();
+renderApp()
 if (module.hot) {
-  module.hot.accept();
+  module.hot.accept()
 }
