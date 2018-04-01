@@ -4,25 +4,25 @@ import { withState } from 'react-simple-state'
 import state from '../../state'
 
 const Status = props => {
-  const { isActive, prepaid_days_left, trial_days_left, createCharge, dismissStatus, statusDismissed } = props.state
+  const { isActive, prepaidDays, freeTrialDays, createCharge, dismissStatus, statusDismissed } = props.state
 
-  if (isActive && !prepaid_days_left && !trial_days_left) return null
+  if (isActive && !prepaidDays && !freeTrialDays) return null
 
-  const title = !isActive ? 'App Disabled' : prepaid_days_left ? 'Prepaid' : 'Free Trial'
-  const onDismiss = prepaid_days_left || trial_days_left ? dismissStatus : null
+  const title = !isActive ? 'App Disabled' : prepaidDays ? 'Prepaid' : 'Free Trial'
+  const onDismiss = prepaidDays || freeTrialDays ? dismissStatus : null
   const status = isActive ? 'info' : 'critical'
 
   let text
   if (!isActive) {
     text = 'Payment is expired'
-  } else if (prepaid_days_left) {
-    text = `${prepaid_days_left} Prepaid Days Left.`
-      + 'If you have any questions about your prepaid days, '
-      + 'or about upgrading to the paid plan, please let us know.'
-  } else if (trial_days_left) {
-    text = `${trial_days_left} Free Trial Days Left.`
-      + 'If you have any questions about your free trial days, '
-      + 'or about upgrading to the paid plan, please let us know.'
+  } else if (prepaidDays) {
+    text = `You have ${prepaidDays} Prepaid Days Left. This is likely from uninstalling during a billing cycle. `
+      + 'If you have any questions contact us via chat support. '
+      + 'To avoid lapse in service, confirm billing before free trial is over.'
+  } else if (freeTrialDays) {
+    text = `You have ${freeTrialDays} free trial days Left. `
+      + 'If you have any questions contact us via chat support. '
+      + 'To avoid lapse in service, confirm billing before free trial is over.'
   }
 
   return statusDismissed ? null : (
@@ -30,7 +30,7 @@ const Status = props => {
       <Banner 
         title={title}
         status={status}
-        action={{ content: 'Confirm Billing', onAction: createCharge }}
+        action={{ content: 'Confirm Billing Now', onAction: createCharge }}
         onDismiss={onDismiss}
       >
         {text}

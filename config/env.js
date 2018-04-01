@@ -9,7 +9,7 @@ const env = Object.assign({
   LIVECHAT_API_KEY: 9552120,
   APPLICATION_CHARGE: '10.00',
   RECURRING_CHARGE: true,
-  FREE_TRIAL_DURATION: 0,
+  FREE_TRIAL_DURATION: 3,
   TEST_BILLING: true,
   DEFAULT_SETTINGS: {
     enabled: true,

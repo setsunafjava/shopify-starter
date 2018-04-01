@@ -94,6 +94,9 @@ const connectDatabase = () => new Promise((resolve, reject) => {
 
 // start the server
 const startServer = () => new Promise((resolve, reject) => {
+  //const { Shop } = require('./models')
+  //Shop.remove({}).then(() => console.log('removed'))
+
   const { PORT, NODE_ENV } = require('../config/env')
   const workers = process.env.WEB_CONCURRENCY || 1
   const lifetime = Infinity

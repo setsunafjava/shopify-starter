@@ -82,5 +82,21 @@ class App extends State {
   }
 }
 
-const app = new App(window.data)
+const initialData = Object.assign({}, {
+  app: null,
+  isActive: true,
+  liveChatKey: null,
+  shopifyKey: null,
+  store: '',
+  trialDays: 0,
+  prepaidDays: 0,
+  settings: {
+    enabled: false,
+    ...window.data.settings
+  }
+}, window.data)
+
+console.log(initialData)
+
+const app = new App(initialData)
 export default app

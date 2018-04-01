@@ -3,7 +3,7 @@ import { SettingToggle, TextStyle } from '@shopify/polaris'
 import { withState } from 'react-simple-state'
 import state from '../../state'
 
-const Settings = ({ settings: { enabled }, saveSettings }) => (
+const Settings = ({ state: { settings: { enabled }, saveSettings } }) => (
   <SettingToggle
     action={{
       content: enabled ? 'Disable' : 'Enable',
@@ -15,7 +15,7 @@ const Settings = ({ settings: { enabled }, saveSettings }) => (
   >
     The hello world app is 
     <TextStyle variation="strong">
-      {enabled ? 'enabled' : 'disabled'}
+      {enabled ? ' enabled' : ' disabled'}
     </TextStyle>.
   </SettingToggle>
 )

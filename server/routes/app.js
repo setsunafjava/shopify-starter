@@ -20,8 +20,8 @@ router.get('/', (request, response, next) => {
       store: domain,
       shopifyKey: SHOPIFY_API_KEY,
       livechatKey: LIVECHAT_API_KEY,
-      trial_days_left,
-      prepaid_days_left,
+      freeTrialDays: trial_days_left,
+      prepaidDays: prepaid_days_left,
       isActive,
       settings,
     }
