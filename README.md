@@ -33,29 +33,29 @@ A boilerplate project to get you quickly building Shopify Embedd Apps using Node
 
 ## Getting Started
 
-#### Requirements
+### Requirements
 
 - Nodejs
 - Mongodb
 - Npm
 - Ngrok
 
-#### Installation
+### Installation
 
 Copy the repository to your system go to the folder and run ```npm install```
 
-#### Start Ngrok
+### Start Ngrok
 
 Ngrok will expose your local server to a temporary domain which you can test and view your app from on Shopify. Download and open Ngrok. From the terminal ```ngrok http 3000```. Once started, copy the https address.
 
-#### Create Shopify App
+### Create Shopify App
 
 Login to your Shopify developer account and create a new app. Name it what you'd like. For the app url use the Ngrok https address followed by /app. For example ```https://fea9b7f7.ngrok.io/app```
 
 Go to the "app info" tab and add the install install callback route to the "Whitelisted redirection URL(s)" textarea. This is the ngrok address followed by /install/callback. 
 For example: ```https://fea9b7f7.ngrok.io/install/callback```
 
-#### Environment Configuration
+### Environment Configuration
 
 Edit ```config/env.js```  to include you're app's configuration. At minimum the URL needs to be set to the ngrok root https address.
 
@@ -72,15 +72,15 @@ Edit ```config/env.js```  to include you're app's configuration. At minimum the 
 ```TEST_BILLING``` - Set this to true for development. Explicit instead of using NODE_ENV so you can test production builds without triggering real charges.
 ```DEFAULT_SETTINGS``` - The default settings for your application. The settings can be sent to script-tags or used by the application to provide functionality.
 
-#### Start Development Server
+### Start Development Server
 
 In the command line go to the project folder and run ```npm run dev```
 
-#### App Installation
+### App Installation
 
 Now that the app is running, go to the ngrok address followed by /install?shop=shopname where shop is the name of your development store. For example if I have a test store at sometestshop.myshopify.com. The install url is: ```https://fea9b7f7.ngrok.io/install?shop=sometestshop```
 
-#### Confirm Billing if Needed
+### Confirm Billing if Needed
 
 The app does not use Shopify's built-in free trial mechanism for recurring billing. Instead it provides a self managed solution for both recurring and single charge billing. 
 
@@ -90,11 +90,11 @@ If the app has a cost and no free trial is offered the user will be prompted to 
 
 Note: The system also checks for prepaid days. This is when a user has paid for a month then uninstalled and re-installed during the same billing cycle. So if Bob pays for 30 days on the 1st, uninstalls on the 7th then reinstalls on the 15th... he has 15 days left. In this case, the user will be forwarded to the app with 15 days left of "prepaid days".
 
-#### ScriptTag Hello World
+### ScriptTag Hello World
 
 The demo simply installs a script-tag that adds a "Hello World" banner to the document body. Go to the embedded app in your test store to toggle the settings and preview the store to see to see the app in action. 
 
-#### Proxy Hello World
+### Proxy Hello World
 
 To add the hello world proxy go to the app's "Extensions" tab. Under the App Proxy provide the following options:
 - sub path prefix ```apps```
