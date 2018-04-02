@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const { NAME, URL, NODE_ENV } = require('../../config/env')
+const { NAME, URL } = require('../../config/env')
+const { NODE_ENV } = process.env
 const { APPLICATION_CHARGE, RECURRING_CHARGE, TEST_BILLING } = require('../../config/env')
 const { verifyHmac, requireShop } = require('../middleware');
 

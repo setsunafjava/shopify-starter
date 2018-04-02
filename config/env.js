@@ -5,7 +5,9 @@ const env = Object.assign({
   URL: 'https://05608288.ngrok.io',
   SHOPIFY_API_KEY: '016892c950d22bca02ff9632e6aff5e7',
   SHOPIFY_API_SECRET: 'b07d9cce8948aef0ae852cd19fa670da',
-  SHOPIFY_APP_SCOPE: 'write_script_tags',
+  SHOPIFY_APP_SCOPE: [
+    'write_script_tags'
+  ],
   LIVECHAT_API_KEY: 9552120,
   APPLICATION_CHARGE: '10.00',
   RECURRING_CHARGE: true,
@@ -13,8 +15,7 @@ const env = Object.assign({
   TEST_BILLING: true,
   DEFAULT_SETTINGS: {
     enabled: true,
-  },
-  NODE_ENV: process.env.NODE_ENV
+  }
 }, process.env)
 
 module.exports = env;

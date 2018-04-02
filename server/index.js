@@ -16,7 +16,8 @@ const app = express()
 const configureExpress = () => new Promise((resolve, reject) => {
 
   const webpackConfig = require('../config/webpack')
-  const { NAME, NODE_ENV } = require('../config/env')
+  const { NAME } = require('../config/env')
+  const { NODE_ENV } = process.env
   const routes = require('./routes')
 
   // set view engine

@@ -1,7 +1,8 @@
 const express = require('express')
 const env = require('../../config/env')
 const { verifyHmac, requireShop } = require('../middleware')
-const { NODE_ENV, NAME, SHOPIFY_API_KEY, LIVECHAT_API_KEY } = env
+const { NAME, SHOPIFY_API_KEY, LIVECHAT_API_KEY } = env
+const NODE_ENV = process.env
 const router = express.Router()
 
 // protect routes, require shop

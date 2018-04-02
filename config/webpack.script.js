@@ -1,10 +1,10 @@
-const path = require('path');
-const webpack = require('webpack');
-const autoprefixer = require('autoprefixer');
+const path = require('path')
+const webpack = require('webpack')
+const autoprefixer = require('autoprefixer')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const babel = require('../config/babel');
-const { NODE_ENV } = require('../config/env');
-const isDev = NODE_ENV === 'development';
+const babel = require('../config/babel')
+const { NODE_ENV } = process.env
+const isDev = NODE_ENV === 'development'
 
 module.exports = {
   name: 'script',
@@ -64,8 +64,8 @@ module.exports = {
       'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
     }),
     new CopyWebpackPlugin([{ 
-      from: path.resolve(__dirname, '../client/app/proxies'), 
-      to: path.resolve(__dirname, '../assets/app/proxies')
+      from: path.resolve(__dirname, '../client/app/proxy'), 
+      to: path.resolve(__dirname, '../assets/app/proxy')
     }])
   ],
 }

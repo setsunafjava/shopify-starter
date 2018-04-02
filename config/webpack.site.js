@@ -1,9 +1,9 @@
-const path = require('path');
-const webpack = require('webpack');
-const autoprefixer = require('autoprefixer');
-const babel = require('../config/babel');
-const { NODE_ENV } = require('../config/env');
-const isDev = NODE_ENV === 'development';
+const path = require('path')
+const webpack = require('webpack')
+const autoprefixer = require('autoprefixer')
+const babel = require('../config/babel')
+const { NODE_ENV } = process.env
+const isDev = NODE_ENV === 'development'
 
 module.exports = {
   name: 'site',
