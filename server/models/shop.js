@@ -45,7 +45,7 @@ Shop.virtual('trial_days_left').get(function() {
   const endsOn = new Date(this.trial_ends_on)
   const daysLeft = new DateDiff(endsOn, today).days()
 
-  if (daysLeft > 0) return daysLeft
+  if (daysLeft > 0) return Math.floor(daysLeft)
   this.trial_ends_on = null
   this.save()
 
@@ -59,7 +59,7 @@ Shop.virtual('prepaid_days_left').get(function() {
   const today = new Date()
   const endsOn = new Date(this.prepaid_ends_on)
   const daysLeft = new DateDiff(endsOn, today).days()
-  if (daysLeft > 0) return daysLeft
+  if (daysLeft > 0) return Math.floor(daysLeft)
   this.prepaid_ends_on = null
   this.save()
   

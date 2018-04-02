@@ -96,7 +96,5 @@ const initialData = Object.assign({}, {
   }
 }, window.data)
 
-console.log(initialData)
-
 const app = new App(initialData)
 export default app

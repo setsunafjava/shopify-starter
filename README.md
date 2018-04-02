@@ -11,7 +11,8 @@ A boilerplate project to get you quickly building Shopify Embedd Apps using Node
 - ReactJS / Polaris front end stack with simple state management
 - Automatically deny access to assets for unpaid accounts (script-tags, proxies, images etc) 
 - LiveChat integration (optional)
-
+- Hot reloading for development
+![Embedded App Demo](demo.png?raw=true "Demo")
 
 ## Todo
 
