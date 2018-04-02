@@ -33,6 +33,11 @@ A boilerplate project to get you quickly building Shopify Embedd Apps using Node
   - Proxies
     - Using external assets
 
+## Disclaimer
+
+This hasn't been used in production yet and I might not get around to unit testing for a little while (other projects). 
+Feel free to contribute or do your do dilligence and run some testing to make sure it meets your requirements.
+
 ## Getting Started
 
 ### Requirements
