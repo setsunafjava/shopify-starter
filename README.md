@@ -13,7 +13,7 @@ A boilerplate project to get you quickly building Shopify Embedd Apps using Node
 - LiveChat integration (optional)
 
 
-## Todos
+## Todo
 
 - Provide a boilerplate for the website route
 - Unit testing
