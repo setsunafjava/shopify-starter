@@ -9,7 +9,7 @@ A boilerplate project to get you quickly building Shopify Embedd Apps using Node
 - HMAC verified routes for all endpoint including assets
 - Public website for marketing efforts and information
 - ReactJS / Polaris front end stack with simple state management
-- Deny's access to assets (script-tags, proxies, images etc) for inactive accounts
+- Automatically deny access to assets for unpaid accounts (script-tags, proxies, images etc) 
 - LiveChat integration (optional)
 
 
