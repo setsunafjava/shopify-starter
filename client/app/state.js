@@ -20,9 +20,9 @@ class App extends State {
    * @desc sets the easdk to state
   */
   loadEASDK({ easdk = null }) {
-    if (this.easdk || !easdk) return 
+    if (this.state.easdk || !easdk) return 
     this.setState({ easdk })
-    this.easdk.stopLoading()
+    this.state.easdk.stopLoading()
   }
 
   /* @param {object} lcsdk: The LiveChat SDK
@@ -31,7 +31,7 @@ class App extends State {
    * a times is used to check required functions, when they're ready we save the lcsdk to state
   */
   loadLCSDK(lcsdk) {
-    if (this.lcsdk || !lcsdk) return
+    if (this.state.lcsdk || !lcsdk) return
     const timer = setInterval(() => {
       if (window.LC_Invite && window.LC_API) {
         const data = [
@@ -40,7 +40,7 @@ class App extends State {
         ]
         clearInterval(timer)
         this.setState({ lcsdk })
-        this.lcsdk.set_custom_variables(data)
+        this.state.lcsdk.set_custom_variables(data)
       }
     }, 200)
   }
@@ -50,16 +50,16 @@ class App extends State {
    * that the save was succesfull, update the local state settings
   */
   saveSettings(settings) {
-    if (this.loading) return
-    this.easdk.startLoading()
+    if (this.state.loading) return
+    this.state.easdk.startLoading()
     axios.post(`/api/settings${window.location.search}`, settings)
     .then(response => {
-      this.easdk.stopLoading()
+      this.state.easdk.stopLoading()
       this.setState({ settings: response.data, loading: false })
     })
     .catch(error => { 
       this.setState({loading: false})
-      this.easdk.stopLoading()
+      this.state.easdk.stopLoading()
     })
   }
 
@@ -70,7 +70,7 @@ class App extends State {
     axios.get(`/billing/confirm${window.location.search}`)
     .then(({ data: { confirmation_url } }) => {
       this.setState({loading: false})
-      this.easdk.redirect(confirmation_url)
+      this.state.easdk.redirect(confirmation_url)
     })
     .catch(error => this.setState({loading: false}))
   }

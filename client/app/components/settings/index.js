@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { SettingToggle, TextStyle } from '@shopify/polaris'
 import { withState } from 'react-simple-state'
-import state from '../../state'
+import app from '../../state'
 
-const Settings = ({ state: { settings: { enabled }, saveSettings } }) => (
+const Settings = ({ app: { state: { settings: { enabled } }, saveSettings } }) => (
   <SettingToggle
     action={{
       content: enabled ? 'Disable' : 'Enable',
@@ -20,4 +20,4 @@ const Settings = ({ state: { settings: { enabled }, saveSettings } }) => (
   </SettingToggle>
 )
 
-export default withState({ state })(Settings)
+export default withState({ app })(Settings)

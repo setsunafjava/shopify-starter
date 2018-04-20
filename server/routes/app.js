@@ -14,6 +14,8 @@ router.get('/', (request, response, next) => {
   const { shop } = response.locals
   const { domain, settings, prepaid_days_left, trial_days_left } = shop
 
+  console.log(shop)
+
   shop.isActive()
   .then(isActive => {
     const data = {

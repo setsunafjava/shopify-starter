@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { withState } from 'react-simple-state';
-import state from '../../state';
+import app from '../../state';
 import { EmbeddedApp } from '@shopify/polaris/embedded';
 import { Page } from '@shopify/polaris';
 
-const EASDK = ({ state: { store, shopifyKey, easdk, loadEASDK }, children }) => (
+const EASDK = ({ app: { state: { store, shopifyKey }, loadEASDK }, children }) => (
   <EmbeddedApp 
     shopOrigin={`https://${store}.myshopify.com`} 
     apiKey={shopifyKey} 
@@ -16,4 +16,4 @@ const EASDK = ({ state: { store, shopifyKey, easdk, loadEASDK }, children }) => 
   </EmbeddedApp>
 )
 
-export default withState({ state })(EASDK);
+export default withState({ app })(EASDK);

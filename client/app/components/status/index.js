@@ -1,10 +1,11 @@
 import { Banner, Button, TextStyle } from '@shopify/polaris'
 import React, { Component } from 'react'
 import { withState } from 'react-simple-state'
-import state from '../../state'
+import app from '../../state'
 
 const Status = props => {
-  const { isActive, prepaidDays, freeTrialDays, createCharge, dismissStatus, statusDismissed } = props.state
+  const { isActive, prepaidDays, freeTrialDays, createCharge, statusDismissed } = props.app.state
+  const { dismissStatus } = props.app
 
   if (isActive && !prepaidDays && !freeTrialDays) return null
 
@@ -40,4 +41,4 @@ const Status = props => {
   )
 }
 
-export default withState({ state })(Status)
+export default withState({ app })(Status)

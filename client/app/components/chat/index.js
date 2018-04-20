@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import LiveChat from 'react-livechat'
 import { withState } from 'react-simple-state'
-import state from '../../state'
+import app from '../../state'
 
-const Chat = ({ state: { livechatKey, lcsdk, loadLCSDK } }) => (
+const Chat = ({ app: { state: { livechatKey, lcsdk }, loadLCSDK } }) => (
   livechatKey ? (
     <LiveChat 
       hide_chat_window={true}
@@ -13,4 +13,4 @@ const Chat = ({ state: { livechatKey, lcsdk, loadLCSDK } }) => (
   ) : null
 )
 
-export default withState({ state })(Chat)
+export default withState({ app })(Chat)
