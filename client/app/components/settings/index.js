@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { SettingToggle, TextStyle } from '@shopify/polaris'
-import { withState } from 'react-simple-state'
+import withReact from 'tynker-state-withReact'
 import app from '../../state'
 
 const Settings = ({ app: { state: { settings: { enabled } }, saveSettings } }) => (
@@ -20,4 +20,4 @@ const Settings = ({ app: { state: { settings: { enabled } }, saveSettings } }) =
   </SettingToggle>
 )
 
-export default withState({ app })(Settings)
+export default withReact({ app })(Settings)

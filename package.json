@@ -21,9 +21,10 @@
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-livechat": "^1.0.22",
-    "react-simple-state": "git+https://github.com/pmpomerleau/react-simple-state.git",
     "shopify-api-node": "^2.11.0",
-    "throng": "^4.0.0"
+    "throng": "^4.0.0",
+    "tynker-state": "git+https://github.com/pmpomerleau/tynker-state.git",
+    "tynker-state-withReact": "git+https://github.com/pmpomerleau/tynker-state-withReact.git"
   },
   "devDependencies": {
     "autoprefixer": "^8.1.0",

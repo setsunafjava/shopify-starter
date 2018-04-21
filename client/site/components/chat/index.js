@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import LiveChat from 'react-livechat';
-import { withState } from 'react-simple-state';
+import withReact from 'tynker-state-withReact';
 import state from '../../state';
 
 const Chat = ({ state: { livechatKey, lcsdk, loadLCSDK } }) => (
@@ -11,4 +11,4 @@ const Chat = ({ state: { livechatKey, lcsdk, loadLCSDK } }) => (
   />
 );
 
-export default withState({ state })(Chat);
+export default withReact({ state })(Chat);

@@ -1,4 +1,4 @@
-import { State } from 'react-simple-state'
+import State from 'tynker-state'
 import axios from 'axios'
 
 class App extends State {

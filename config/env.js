@@ -2,7 +2,7 @@ const env = Object.assign({
   NAME: 'Shopify Embedded Starter',
   PORT: 3000,
   DATABASE: 'mongodb://localhost/shopify-embedded-starter-app',
-  URL: 'https://549c3a99.ngrok.io',
+  URL: 'https://42a45111.ngrok.io',
   SHOPIFY_API_KEY: '016892c950d22bca02ff9632e6aff5e7',
   SHOPIFY_API_SECRET: 'b07d9cce8948aef0ae852cd19fa670da',
   SHOPIFY_APP_SCOPE: [

@@ -1,6 +1,6 @@
 import { Banner, Button, TextStyle } from '@shopify/polaris'
 import React, { Component } from 'react'
-import { withState } from 'react-simple-state'
+import withReact from 'tynker-state-withReact'
 import app from '../../state'
 
 const Status = props => {
@@ -41,4 +41,4 @@ const Status = props => {
   )
 }
 
-export default withState({ app })(Status)
+export default withReact({ app })(Status)

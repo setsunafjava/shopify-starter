@@ -109,3 +109,11 @@ To add the hello world proxy go to the app's "Extensions" tab. Under the App Pro
 - proxy url ```https://fea9b7f7.ngrok.io/assets/app/proxy```
 
 Now open your test store to the apps/hello-world route and you'll see your proxy page. ```https://sometestshop.myshopify.com/apps/hello-world```
+
+## License
+
+This project is licensed under the GNU GPLv3 - see the [LICENSE.md](LICENSE.md) file for details  
+
+## Libaries
+
+This project uses third party libraries. Please refer to package.json for the list to lookup documentation and license information.  

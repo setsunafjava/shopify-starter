@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withState } from 'react-simple-state';
+import withReact from 'tynker-state-withReact'
 import app from '../../state';
 import { EmbeddedApp } from '@shopify/polaris/embedded';
 import { Page } from '@shopify/polaris';
@@ -16,4 +16,4 @@ const EASDK = ({ app: { state: { store, shopifyKey }, loadEASDK }, children }) =
   </EmbeddedApp>
 )
 
-export default withState({ app })(EASDK);
+export default withReact({ app })(EASDK);
