@@ -6,6 +6,8 @@
     "start": "cross-env NODE_ENV=production node ./server/index.js",
     "build": "rimraf ./assets && cross-env NODE_ENV=production webpack --config ./config/webpack.js"
   },
+  "author": "Paul Pomerleau <paul@thynkstudios.ca> (https://github.com/pmpomerleau)",
+  "license": "GNU GPLv3",
   "dependencies": {
     "@shopify/polaris": "^1.12.2",
     "axios": "^0.18.0",
