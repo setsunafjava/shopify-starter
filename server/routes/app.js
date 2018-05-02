@@ -11,7 +11,8 @@ router.use(requireShop)
 
 // render the app with required data
 router.get('/', (request, response, next) => {
-  const { shop } = response.locals
+  const { shop,io } = response.locals
+  console.log(io)
   const { domain, settings, prepaid_days_left, trial_days_left } = shop
 
   console.log(shop)
@@ -28,7 +29,7 @@ router.get('/', (request, response, next) => {
       isActive,
       settings,
     }
-
+    console.log(data);
     if (NODE_ENV === 'development') {
       // include all data for debugging
       data.debug = { env, shop: shop.toObject() }

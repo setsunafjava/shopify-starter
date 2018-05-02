@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import withReact from 'tynker-state-withReact'
+import withReact from 'tynker-state--withReact'
 import app from '../../state';
 import { EmbeddedApp } from '@shopify/polaris/embedded';
 import { Page } from '@shopify/polaris';

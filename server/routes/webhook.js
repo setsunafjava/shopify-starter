@@ -9,8 +9,8 @@ router.use(requireShop)
 
 // triggered when app is uninstalled
 router.post('/app/uninstalled', (request, response, next) => {
-  const { shop } = response.locals
-
+  const { shop, io } = response.locals
+  console.log(io);
   // set the uninstallation date and save
   shop.uninstalled_on = new Date()
   //shop.remove()

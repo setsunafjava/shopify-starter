@@ -10,7 +10,6 @@ class App extends Component {
       <EASDK>
         <Status />
         <Settings />
-        <Chat /> 
       </EASDK>
     )
   }

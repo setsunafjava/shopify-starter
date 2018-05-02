@@ -1,0 +1,999 @@
+.yoHolder,.yoHolder *{
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    outline:0;
+    font-family:Lato,Arial,Helvetica,sans-serif
+}
+.yo-notification{
+    height:100%
+}
+.yo-event-image{
+    height:100%;
+    width:95px;
+    position:absolute;
+    left:0;
+    float:left;
+    background:#fff
+}
+.yo-event-image>a{
+    background-color:#fff
+}
+.yo-event-image>a>img,.yo-event-image>img{
+    position:absolute;
+    top:50%;
+    left:50%;
+    max-width:100%;
+    max-height:90%;
+    -moz-transform:translate(-50%,-50%);
+    -webkit-transform:translate(-50%,-50%);
+    -o-transform:translate(-50%,-50%);
+    -ms-transform:translate(-50%,-50%);
+    transform:translate(-50%,-50%);
+    -moz-transform-style:preserve-3d;
+    -o-transform-style:preserve-3d;
+    -ms-transform-style:preserve-3d;
+    -webkit-transform-style:preserve-3d;
+    transform-style:preserve-3d
+}
+.yo-notification-info{
+    padding:10px 20px 30px 110px;
+    height:100%;
+    position:relative
+}
+.yo-time-stamp{
+    position:absolute;
+    bottom:5px;
+    right:10px;
+    font-size:12px;
+    text-transform:uppercase;
+    color:#484848
+}
+.yoHolder,.yoHolder.smaller-size{
+    position:fixed;
+    background:#fefefe;
+    box-shadow:0 0 10px rgba(0,0,0,.2);
+    border:1px solid #ccc
+}
+.yo-notification-info .yo-message{
+    font-size:14px;
+    color:#484848;
+    font-weight:400
+}
+.yoHolder.dark-green .yo-notification-info .yo-message,.yoHolder.dark-green .yo-notification-info .yo-time-stamp,.yoHolder.semi-black .yo-notification-info .yo-message,.yoHolder.semi-black .yo-notification-info .yo-time-stamp{
+    color:#fff
+}
+.yo-notification-info .yo-message span{
+    font-weight:400;
+    line-height:1.2;
+    font-size:13px
+}
+.yoHolder{
+    display:none;
+    max-width:93%;
+    width:400px;
+    height:auto;
+    bottom:-100%;
+    left:10px;
+    /* -moz-animation:slide-bl-b 9s ease-in-out infinite;
+    -o-animation:slide-bl-b 9s ease-in-out infinite;
+    -ms-animation:slide-bl-b 9s ease-in-out infinite;
+    -webkit-animation:slide-bl-b 9s ease-in-out infinite; */
+    animation:slide-bl-b 9s ;
+}
+.yoHolder a{
+    text-decoration:none;
+    color:#139BBD!important
+}
+.dark-green.yoHolder a,.semi-black.yoHolder a{
+    color:#dcbb46!important
+}
+.yoHolder a:hover{
+    text-decoration:underline
+}
+.yoHolder:hover{
+    -moz-animation-play-state:paused;
+    -webkit-animation-play-state:paused;
+    -ms-animation-play-state:paused;
+    -o-animation-play-state:paused;
+    animation-play-state:paused
+}
+.yoHolder.smaller-size{
+    width:315px;
+    height:auto
+}
+.smaller-size .yo-notification-info .yo-message{
+    font-size:12px;
+    padding-bottom:0
+}
+.smaller-size .yo-event-image{
+    width:70px
+}
+.smaller-size .yo-notification-info{
+    padding:10px 20px 10px 80px
+}
+.smaller-size .yo-time-stamp{
+    position:static;
+    margin-top:5px
+}
+.yoHolder.dark-green{
+    background:#374041;
+    border:0
+}
+.yoHolder.semi-black{
+    background:rgba(0,0,0,.9);
+    border:0
+}
+@-moz-keyframes fade-tl{
+    0%,100%{
+        opacity:0;
+        top:10px;
+        left:10px
+    }
+    89%,11%{
+        opacity:1;
+        top:10px;
+        left:10px;
+    }
+}
+@-moz-keyframes fade-tr{
+    0%,100%{
+        opacity:0;
+        top:10px;
+        right:10px
+    }
+    89%,11%{
+        opacity:1;
+        top:10px;
+        right:10px
+    }
+}
+@-moz-keyframes fade-br{
+    0%,100%{
+        opacity:0;
+        bottom:10px;
+        right:10px
+    }
+    89%,11%{
+        opacity:1;
+        bottom:10px;
+        right:10px
+    }
+}
+@-moz-keyframes fade-bl{
+    0%,100%{
+        opacity:0;
+        bottom:10px;
+        left:10px
+    }
+    89%,11%{
+        opacity:1;
+        bottom:10px;
+        left:10px
+    }
+}
+@-moz-keyframes slide-bl-b{
+    0%{
+        top:auto;
+        bottom:-100%;
+        left:10px
+    }
+    89%,11%{
+        bottom:10px;
+        left:10px
+    }
+    100%{
+        bottom:-100%;
+        left:100px
+    }
+}
+@-moz-keyframes slide-bl-l{
+    0%{
+        top:auto;
+        bottom:10px;
+        left:-100%
+    }
+    89%,11%{
+        left:10px;
+        bottom:10px
+    }
+    100%{
+        left:-100%;
+        bottom:10px
+    }
+}
+@-moz-keyframes slide-br-b{
+    0%{
+        top:auto;
+        bottom:-100%;
+        right:10px
+    }
+    89%,11%{
+        bottom:10px;
+        right:10px
+    }
+    100%{
+        bottom:-100%;
+        right:10px
+    }
+}
+@-moz-keyframes slide-br-r{
+    0%{
+        top:auto;
+        bottom:10px;
+        right:-100%
+    }
+    89%,11%{
+        right:10px;
+        bottom:10px
+    }
+    100%{
+        right:-100%;
+        bottom:10px
+    }
+}
+@-moz-keyframes slide-tl-t{
+    0%{
+        bottom:auto;
+        top:-100%;
+        left:10px
+    }
+    89%,11%{
+        top:10px;
+        left:10px
+    }
+    100%{
+        top:-100%;
+        left:10px
+    }
+}
+@-moz-keyframes slide-tl-l{
+    0%{
+        bottom:auto;
+        top:10px;
+        left:-100%
+    }
+    89%,11%{
+        left:10px;
+        top:10px
+    }
+    100%{
+        left:-100%;
+        top:10px
+    }
+}
+@-moz-keyframes slide-tr-t{
+    0%{
+        bottom:auto;
+        top:-100%;
+        right:10px
+    }
+    89%,11%{
+        top:10px;
+        right:10px
+    }
+    100%{
+        top:-100%;
+        right:10px
+    }
+}
+@-moz-keyframes slide-tr-r{
+    0%{
+        bottom:auto;
+        top:10px;
+        right:-100%
+    }
+    89%,11%{
+        right:10px;
+        top:10px
+    }
+    100%{
+        right:-100%;
+        top:10px
+    }
+}
+@-webkit-keyframes fade-tl{
+    0%,100%{
+        opacity:0;
+        top:10px;
+        left:10px
+    }
+    89%,11%{
+        opacity:1;
+        top:10px;
+        left:10px
+    }
+}
+@-webkit-keyframes fade-tr{
+    0%,100%{
+        opacity:0;
+        top:10px;
+        right:10px
+    }
+    89%,11%{
+        opacity:1;
+        top:10px;
+        right:10px
+    }
+}
+@-webkit-keyframes fade-br{
+    0%,100%{
+        opacity:0;
+        bottom:10px;
+        right:10px
+    }
+    89%,11%{
+        opacity:1;
+        bottom:10px;
+        right:10px
+    }
+}
+@-webkit-keyframes fade-bl{
+    0%,100%{
+        opacity:0;
+        bottom:10px;
+        left:10px
+    }
+    89%,11%{
+        opacity:1;
+        bottom:10px;
+        left:10px
+    }
+}
+@-webkit-keyframes slide-bl-b{
+    0%{
+        top:auto;
+        bottom:-100%;
+        left:10px
+    }
+    89%,11%{
+        bottom:10px;
+        left:10px
+    }
+    100%{
+        bottom:-100%;
+        left:10px
+    }
+}
+@-webkit-keyframes slide-bl-l{
+    0%{
+        top:auto;
+        bottom:10px;
+        left:-100%
+    }
+    89%,11%{
+        left:10px;
+        bottom:10px
+    }
+    100%{
+        left:-100%;
+        bottom:10px
+    }
+}
+@-webkit-keyframes slide-br-b{
+    0%{
+        top:auto;
+        bottom:-100%;
+        right:10px
+    }
+    89%,11%{
+        bottom:10px;
+        right:10px
+    }
+    100%{
+        bottom:-100%;
+        right:10px
+    }
+}
+@-webkit-keyframes slide-br-r{
+    0%{
+        top:auto;
+        bottom:10px;
+        right:-100%
+    }
+    89%,11%{
+        right:10px;
+        bottom:10px
+    }
+    100%{
+        right:-100%;
+        bottom:10px
+    }
+}
+@-webkit-keyframes slide-tl-t{
+    0%{
+        bottom:auto;
+        top:-100%;
+        left:10px
+    }
+    89%,11%{
+        top:10px;
+        left:10px
+    }
+    100%{
+        top:-100%;
+        left:10px
+    }
+}
+@-webkit-keyframes slide-tl-l{
+    0%{
+        bottom:auto;
+        top:10px;
+        left:-100%
+    }
+    89%,11%{
+        left:10px;
+        top:10px
+    }
+    100%{
+        left:-100%;
+        top:10px
+    }
+}
+@-webkit-keyframes slide-tr-t{
+    0%{
+        bottom:auto;
+        top:-100%;
+        right:10px
+    }
+    89%,11%{
+        top:10px;
+        right:10px
+    }
+    100%{
+        top:-100%;
+        right:10px
+    }
+}
+@-webkit-keyframes slide-tr-r{
+    0%{
+        bottom:auto;
+        top:10px;
+        right:-100%
+    }
+    89%,11%{
+        right:10px;
+        top:10px
+    }
+    100%{
+        right:-100%;
+        top:10px
+    }
+}
+@-ms-keyframes fade-tl{
+    0%,10%,100%,90%{
+        top:10px;
+        left:10px
+    }
+    0%,100%{
+        opacity:0
+    }
+    89%,11%{
+        opacity:1
+    }
+}
+@-ms-keyframes fade-tr{
+    0%,10%,100%,90%{
+        top:10px;
+        right:10px
+    }
+    0%,100%{
+        opacity:0
+    }
+    89%,11%{
+        opacity:1
+    }
+}
+@-ms-keyframes fade-br{
+    0%,10%,100%,90%{
+        bottom:10px;
+        right:10px
+    }
+    0%,100%{
+        opacity:0
+    }
+    89%,11%{
+        opacity:1
+    }
+}
+@-ms-keyframes fade-bl{
+    0%,10%,100%,90%{
+        bottom:10px;
+        left:10px
+    }
+    0%,100%{
+        opacity:0
+    }
+    89%,11%{
+        opacity:1
+    }
+}
+@-ms-keyframes slide-bl-b{
+    0%,10%,100%,90%{
+        left:10px
+    }
+    0%,100%{
+        bottom:-100%
+    }
+    0%{
+        top:auto
+    }
+    89%,11%{
+        bottom:10px
+    }
+}
+@-ms-keyframes slide-bl-l{
+    0%,10%,100%,90%{
+        bottom:10px
+    }
+    0%,100%{
+        left:-100%
+    }
+    0%{
+        top:auto
+    }
+    89%,11%{
+        left:10px
+    }
+}
+@-ms-keyframes slide-br-b{
+    0%,10%,100%,90%{
+        right:10px
+    }
+    0%,100%{
+        bottom:-100%
+    }
+    0%{
+        top:auto
+    }
+    89%,11%{
+        bottom:10px
+    }
+}
+@-ms-keyframes slide-br-r{
+    0%,10%,100%,90%{
+        bottom:10px
+    }
+    0%,100%{
+        right:-100%
+    }
+    0%{
+        top:auto
+    }
+    89%,11%{
+        right:10px
+    }
+}
+@-ms-keyframes slide-tl-t{
+    0%,10%,100%,90%{
+        left:10px
+    }
+    0%,100%{
+        top:-100%
+    }
+    0%{
+        bottom:auto
+    }
+    89%,11%{
+        top:10px
+    }
+}
+@-ms-keyframes slide-tl-l{
+    0%,10%,100%,90%{
+        top:10px
+    }
+    0%,100%{
+        left:-100%
+    }
+    0%{
+        bottom:auto
+    }
+    89%,11%{
+        left:10px
+    }
+}
+@-ms-keyframes slide-tr-t{
+    0%,10%,100%,90%{
+        right:10px
+    }
+    0%,100%{
+        top:-100%
+    }
+    0%{
+        bottom:auto
+    }
+    89%,11%{
+        top:10px
+    }
+}
+@-ms-keyframes slide-tr-r{
+    0%,10%,100%,90%{
+        top:10px
+    }
+    0%,100%{
+        right:-100%
+    }
+    0%{
+        bottom:auto
+    }
+    89%,11%{
+        right:10px
+    }
+}
+@-o-keyframes fade-tl{
+    0%,100%{
+        opacity:0;
+        top:10px;
+        left:10px
+    }
+    89%,11%{
+        opacity:1;
+        top:10px;
+        left:10px
+    }
+}
+@-o-keyframes fade-tr{
+    0%,100%{
+        opacity:0;
+        top:10px;
+        right:10px
+    }
+    89%,11%{
+        opacity:1;
+        top:10px;
+        right:10px
+    }
+}
+@-o-keyframes fade-br{
+    0%,100%{
+        opacity:0;
+        bottom:10px;
+        right:10px
+    }
+    89%,11%{
+        opacity:1;
+        bottom:10px;
+        right:10px
+    }
+}
+@-o-keyframes fade-bl{
+    0%,100%{
+        opacity:0;
+        bottom:10px;
+        left:10px
+    }
+    89%,11%{
+        opacity:1;
+        bottom:10px;
+        left:10px
+    }
+}
+@-o-keyframes slide-bl-b{
+    0%{
+        top:auto;
+        bottom:-100%;
+        left:10px
+    }
+    89%,11%{
+        bottom:10px;
+        left:10px
+    }
+    100%{
+        bottom:-100%;
+        left:10px
+    }
+}
+@-o-keyframes slide-bl-l{
+    0%{
+        top:auto;
+        bottom:10px;
+        left:-100%
+    }
+    89%,11%{
+        left:10px;
+        bottom:10px
+    }
+    100%{
+        left:-100%;
+        bottom:10px
+    }
+}
+@-o-keyframes slide-br-b{
+    0%{
+        top:auto;
+        bottom:-100%;
+        right:10px
+    }
+    89%,11%{
+        bottom:10px;
+        right:10px
+    }
+    100%{
+        bottom:-100%;
+        right:10px
+    }
+}
+@-o-keyframes slide-br-r{
+    0%{
+        top:auto;
+        bottom:10px;
+        right:-100%
+    }
+    89%,11%{
+        right:10px;
+        bottom:10px
+    }
+    100%{
+        right:-100%;
+        bottom:10px
+    }
+}
+@-o-keyframes slide-tl-t{
+    0%{
+        bottom:auto;
+        top:-100%;
+        left:10px
+    }
+    89%,11%{
+        top:10px;
+        left:10px
+    }
+    100%{
+        top:-100%;
+        left:10px
+    }
+}
+@-o-keyframes slide-tl-l{
+    0%{
+        bottom:auto;
+        top:10px;
+        left:-100%
+    }
+    89%,11%{
+        left:10px;
+        top:10px
+    }
+    100%{
+        left:-100%;
+        top:10px
+    }
+}
+@-o-keyframes slide-tr-t{
+    0%{
+        bottom:auto;
+        top:-100%;
+        right:10px
+    }
+    89%,11%{
+        top:10px;
+        right:10px
+    }
+    100%{
+        top:-100%;
+        right:10px
+    }
+}
+@-o-keyframes slide-tr-r{
+    0%{
+        bottom:auto;
+        top:10px;
+        right:-100%
+    }
+    89%,11%{
+        right:10px;
+        top:10px
+    }
+    100%{
+        right:-100%;
+        top:10px
+    }
+}
+@keyframes fade-tl{
+    0%,100%{
+        opacity:0;
+        top:10px;
+        left:10px
+    }
+    89%,11%{
+        opacity:1;
+        top:10px;
+        left:10px
+    }
+}
+@keyframes fade-tr{
+    0%,100%{
+        opacity:0;
+        top:10px;
+        right:10px
+    }
+    89%,11%{
+        opacity:1;
+        top:10px;
+        right:10px
+    }
+}
+@keyframes fade-br{
+    0%,100%{
+        opacity:0;
+        bottom:10px;
+        right:10px
+    }
+    89%,11%{
+        opacity:1;
+        bottom:10px;
+        right:10px
+    }
+}
+@keyframes fade-bl{
+    0%,100%{
+        opacity:0;
+        bottom:10px;
+        left:10px
+    }
+    89%,11%{
+        opacity:1;
+        bottom:10px;
+        left:10px
+    }
+}
+@keyframes slide-bl-b{
+    0%{
+        top:auto;
+        bottom:-100%;
+        left:10px
+    }
+    89%,11%{
+        bottom:10px;
+        left:10px
+    }
+    100%{
+        bottom:-100%;
+        left:10px
+    } 
+}
+@keyframes slide-bl-l{
+    0%{
+        top:auto;
+        bottom:10px;
+        left:-100%
+    }
+    89%,11%{
+        left:10px;
+        bottom:10px
+    }
+    100%{
+        left:-100%;
+        bottom:10px
+    }
+}
+@keyframes slide-br-b{
+    0%{
+        top:auto;
+        bottom:-100%;
+        right:10px
+    }
+    89%,11%{
+        bottom:10px;
+        right:10px
+    }
+    100%{
+        bottom:-100%;
+        right:10px
+    }
+}
+@keyframes slide-br-r{
+    0%{
+        top:auto;
+        bottom:10px;
+        right:-100%
+    }
+    89%,11%{
+        right:10px;
+        bottom:10px
+    }
+    100%{
+        right:-100%;
+        bottom:10px
+    }
+}
+@keyframes slide-tl-t{
+    0%{
+        bottom:auto;
+        top:-100%;
+        left:10px
+    }
+    89%,11%{
+        top:10px;
+        left:10px
+    }
+    100%{
+        top:-100%;
+        left:10px
+    }
+}
+@keyframes slide-tl-l{
+    0%{
+        bottom:auto;
+        top:10px;
+        left:-100%
+    }
+    89%,11%{
+        left:10px;
+        top:10px
+    }
+    100%{
+        left:-100%;
+        top:10px
+    }
+}
+@keyframes slide-tr-t{
+    0%{
+        bottom:auto;
+        top:-100%;
+        right:10px
+    }
+    89%,11%{
+        top:10px;
+        right:10px
+    }
+    100%{
+        top:-100%;
+        right:10px
+    }
+}
+@keyframes slide-tr-r{
+    0%{
+        bottom:auto;
+        top:10px;
+        right:-100%
+    }
+    89%,11%{
+        right:10px;
+        top:10px
+    }
+    100%{
+        right:-100%;
+        top:10px
+    }
+}
+
+.yo-notification-info .yo-message{
+    line-height:1.4
+}
+.yo-event-image>a{
+    z-index:9999;
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    display:block;
+    background-repeat:no-repeat;
+    background-size:contain;
+    background-position:center center
+}
+#yoInnerHolder span#closeYo {
+    display: block;
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    right: 3px;
+    line-height:normal;
+}
+#yoInnerHolder span#closeYo:after {
+    content: '×';
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:20px;
+    color:#000;
+}
+.dark-green #yoInnerHolder span#closeYo:after,.semi-black #yoInnerHolder span#closeYo:after {
+    color:#fff;
+}
+.yoHolder{
+    border-radius:3px;
+    overflow:hidden;
+    z-index:2147483647;
+    text-align:left
+}

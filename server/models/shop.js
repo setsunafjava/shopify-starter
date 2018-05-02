@@ -82,7 +82,6 @@ Shop.methods.isActive = function() {
     let isActive = !APPLICATION_CHARGE
     isActive = isActive || (!RECURRING_CHARGE && this.last_active_charge)
     isActive = isActive || (this.prepaid_ends_on || this.trial_ends_on)
-    
     if (isActive) {
       return resolve(true)
     } else if (!this.last_active_charge) {

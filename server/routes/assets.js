@@ -14,10 +14,13 @@ router.use(requireShop)
 
 // serve the script-tag if the account is active
 router.get('/app/script-tag', (request, response, next) => {
+  onsole.log('go here111111111111111');
   const { shop } = response.locals
+  const { query : {type} } = request;
   shop.isActive()
   .then(active => {
     if (active) {
+      console.log('aa: '+ request.path);
       const root = path.join(__dirname, '/../../assets/app/script-tag/')
       return response.sendFile(request.path, { root })
     } else {
@@ -45,6 +48,7 @@ router.get('/app/proxies', (request, response, next) => {
 
 // serve the embedded app assets
 router.get('/app', (request, response, next) => {
+    console.log('aa: '+ request.path);
   const root = path.join(__dirname, '/../../assets/app/')
   response.sendFile(request.path, { root })
 })

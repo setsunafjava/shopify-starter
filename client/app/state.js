@@ -66,6 +66,7 @@ class App extends State {
   /* @desc gets then redirects the user to charge confirmation page
   */
   createCharge() {
+    console.log('createCharge');
     this.setState({loading: true})
     axios.get(`/billing/confirm${window.location.search}`)
     .then(({ data: { confirmation_url } }) => {
@@ -95,6 +96,6 @@ const initialData = Object.assign({}, {
     ...window.data.settings
   }
 }, window.data)
-
+console.log(initialData);
 const app = new App(initialData)
 export default app

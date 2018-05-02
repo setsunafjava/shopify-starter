@@ -60,7 +60,7 @@ router.use(requireShop)
 // install permenant access token
 router.get('/callback', (request, response, next) => {
   const { shop } = response.locals
-
+console.log('ko:' +shop.domain);
   // get the auth token
   const authURL = `https://${shop.domain}.myshopify.com/admin/oauth/access_token`
   axios.post(authURL, {
@@ -70,6 +70,7 @@ router.get('/callback', (request, response, next) => {
   })
   .then((result) => {
     // save to the db
+    console.log(result.data.access_token);
     shop.token = result.data.access_token
     shop.save().then(() => next())
     .catch(next)
@@ -147,15 +148,15 @@ router.get('/callback', (request, response, next) => {
   shop.prepaid_ends_on = null
   shop.uninstalled_on = null
   shop.installed_on = new Date()
-
+  console.log('APPLICATION_CHARGE: ' + APPLICATION_CHARGE);
   if (APPLICATION_CHARGE && (!last_active_charge || RECURRING_CHARGE)) {
     // if there's a recurring charge or 
     // if it's not already paid check for free days
 
     let endsOn
     let daysLeft
-
-    if (last_active_charge && (uninstalled_on || installed_on)) {
+  console.log('last_active_charge: ' + last_active_charge);
+    if (last_active_charge && last_active_charge.id && (uninstalled_on || installed_on)) {
       // if charged before then dont bother checking free trial 
       // but check for left-over days from previous billing cycles
       // note: if the uninstall date is null check the install date
@@ -172,7 +173,11 @@ router.get('/callback', (request, response, next) => {
       }
 
     } else if (FREE_TRIAL_DURATION > 0) {
-      
+      console.log(FREE_TRIAL_DURATION);
+              console.log('trial_ends_on: ' + trial_ends_on);
+              console.log('uninstalled_on: ' + uninstalled_on);
+              console.log('installed_on: ' + installed_on);
+
       if (!trial_ends_on && !installed_on) {
         // if never used add the trial
 
@@ -192,6 +197,7 @@ router.get('/callback', (request, response, next) => {
           endsOn.setDate(endsOn.getDate() + daysLeft)
           shop.trial_ends_on = endsOn
         }
+        console.log('shop.trial_ends_on: ' + shop.trial_ends_on);
       }
     }
   }

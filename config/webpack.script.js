@@ -5,12 +5,12 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const babel = require('../config/babel')
 const { NODE_ENV } = process.env
 const isDev = NODE_ENV === 'development'
-
+const ExtractTextPlugin = require("extract-text-webpack-plugin")
 module.exports = {
   name: 'script',
   entry: {
     main: [
-      path.resolve(__dirname, '../client/app/script-tag/index.js'),
+      path.resolve(__dirname, '../client/app/script-tag/index.js')
     ],
   },
   output: {
@@ -31,6 +31,13 @@ module.exports = {
           loader: 'babel-loader',
           options : Object.assign({}, babel, {babelrc: false})
         }
+      }, {
+       test: /\.css$/,
+        exclude: /client/,
+        use: ExtractTextPlugin.extract({
+          fallback: "style-loader",
+          use: "css-loader"
+        })
       },
       {
         test: /\.css$/,
@@ -66,6 +73,10 @@ module.exports = {
     new CopyWebpackPlugin([{ 
       from: path.resolve(__dirname, '../client/app/proxy'), 
       to: path.resolve(__dirname, '../assets/app/proxy')
-    }])
+    }]),
+    new ExtractTextPlugin({
+      filename: 'assets/all.bundle.css',
+      allChunks: true
+    }),
   ],
 }

@@ -1,12 +1,13 @@
 import { Banner, Button, TextStyle } from '@shopify/polaris'
 import React, { Component } from 'react'
-import withReact from 'tynker-state-withReact'
+import withReact from 'tynker-state--withReact'
 import app from '../../state'
 
 const Status = props => {
-  const { isActive, prepaidDays, freeTrialDays, createCharge, statusDismissed } = props.app.state
+  const {  prepaidDays, freeTrialDays, createCharge, statusDismissed } = props.app;
+  const { isActive } = props.app.state;
   const { dismissStatus } = props.app
-
+  console.log(props);
   if (isActive && !prepaidDays && !freeTrialDays) return null
 
   const title = !isActive ? 'App Disabled' : prepaidDays ? 'Prepaid' : 'Free Trial'

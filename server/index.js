@@ -10,7 +10,17 @@ const hbs = require('hbs')
 const webpack = require('webpack')
 const webpackMiddleware = require('webpack-dev-middleware')
 const webpackHotMiddleware = require('webpack-hot-middleware')
+
+
 const app = express()
+const server = require('http').Server(app)
+const io = require('socket.io')(server)
+io.on('connection',  (socket) =>{
+  console.log('Connected');
+   socket.emit('connected', { hello: 'world' });
+});
+
+
 
 // configure express server
 const configureExpress = () => new Promise((resolve, reject) => {
@@ -62,6 +72,15 @@ const configureExpress = () => new Promise((resolve, reject) => {
   }
 
   // setup the routes
+  const requireIo = (request, response, next) => {
+    console.log('go here');
+    response.locals.io = io
+    return next()
+
+  }
+  const router = express.Router()
+  router.use(requireIo)
+  app.use('/*',router)
   app.use('/install', routes.install)
   app.use('/billing', routes.billing)
   app.use('/webhook', routes.webhook)
@@ -104,7 +123,7 @@ const startServer = () => new Promise((resolve, reject) => {
 
   const start = () => {
     app.set('port', PORT)
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log(`server started at: http://localhost:${PORT}`)
       return resolve()
     })
