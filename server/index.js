@@ -87,7 +87,6 @@ const configureExpress = () => new Promise((resolve, reject) => {
   app.use('/assets', routes.assets)
   app.use('/api', routes.api)
   app.use('/app', routes.app)
-  app.use('/', routes.site)
 
   // handle unmatched routes
   app.use((req, res, next) => {
