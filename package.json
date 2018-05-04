@@ -2,8 +2,8 @@
   "name": "shopify-embedded-app-starter",
   "version": "0.0.0",
   "scripts": {
-    "dev": "start mongod && cross-env NODE_ENV=development node ./server/index.js",
-    "start": "cross-env NODE_ENV=production node ./server/index.js",
+    "dev": "start mongod && cross-env NODE_ENV=development nodemon ./server/index.js",
+    "start": "cross-env NODE_ENV=production nodemon ./server/index.js",
     "build": "rimraf ./assets && cross-env NODE_ENV=production webpack --config ./config/webpack.js"
   },
   "author": "Paul Pomerleau <paul@thynkstudios.ca> (https://github.com/pmpomerleau)",
