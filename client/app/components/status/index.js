@@ -1,6 +1,6 @@
 import { Banner, Button, TextStyle } from '@shopify/polaris'
 import React, { Component } from 'react'
-import withReact from 'tynker-state--withReact'
+import withReact from '../../util/tynker-with'
 import app from '../../state'
 
 const Status = props => {
